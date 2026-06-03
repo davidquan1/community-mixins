@@ -124,7 +124,7 @@ func LabelsSetPromQL(query, labelMatchType, name, value string, processor *Perse
 		return ""
 	}
 
-	if name == "" || value == "" {
+	if name == "" {
 		// Get the modified query and restore Perses variables
 		result := expr.Pretty(0)
 		return processor.Restore(result, originalVars)
@@ -146,7 +146,8 @@ func LabelsSetPromQL(query, labelMatchType, name, value string, processor *Perse
 	}
 
 	parser.Inspect(expr, func(node parser.Node, path []parser.Node) error {
-		if n, ok := node.(*parser.VectorSelector); ok {
+		switch n := node.(type) {
+		case *parser.VectorSelector:
 			var found bool
 			for i, l := range n.LabelMatchers {
 				if l.Name == name {
@@ -167,6 +168,26 @@ func LabelsSetPromQL(query, labelMatchType, name, value string, processor *Perse
 					Name:  name,
 					Value: value,
 				})
+			}
+		case *parser.BinaryExpr:
+			if n.VectorMatching != nil && value == "" {
+				// Remove the label from matching clauses
+				for i, l := range n.VectorMatching.MatchingLabels {
+					if l == name {
+						n.VectorMatching.MatchingLabels = append(n.VectorMatching.MatchingLabels[:i], n.VectorMatching.MatchingLabels[i+1:]...)
+						break
+					}
+				}
+			}
+		case *parser.AggregateExpr:
+			if value == "" {
+				// Remove the label from aggregation clauses
+				for i, l := range n.Grouping {
+					if l == name {
+						n.Grouping = append(n.Grouping[:i], n.Grouping[i+1:]...)
+						break
+					}
+				}
 			}
 		}
 		return nil

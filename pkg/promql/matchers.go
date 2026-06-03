@@ -33,7 +33,8 @@ func LabelsSetPromQLV2(query parser.Expr, matchType labels.MatchType, name, valu
 	}
 
 	promqlbuilder.Inspect(query, func(node parser.Node, path []parser.Node) error {
-		if n, ok := node.(*parser.VectorSelector); ok {
+		switch n := node.(type) {
+		case *parser.VectorSelector:
 			var found bool
 			for i, l := range n.LabelMatchers {
 				if l.Name == name {
@@ -54,6 +55,26 @@ func LabelsSetPromQLV2(query parser.Expr, matchType labels.MatchType, name, valu
 					Name:  name,
 					Value: value,
 				})
+			}
+		case *parser.BinaryExpr:
+			if n.VectorMatching != nil && value == "" {
+				// Remove the label from matching clauses
+				for i, l := range n.VectorMatching.MatchingLabels {
+					if l == name {
+						n.VectorMatching.MatchingLabels = append(n.VectorMatching.MatchingLabels[:i], n.VectorMatching.MatchingLabels[i+1:]...)
+						break
+					}
+				}
+			}
+		case *parser.AggregateExpr:
+			if value == "" {
+				// Remove the label from aggregation clauses
+				for i, l := range n.Grouping {
+					if l == name {
+						n.Grouping = append(n.Grouping[:i], n.Grouping[i+1:]...)
+						break
+					}
+				}
 			}
 		}
 		return nil
