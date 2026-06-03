@@ -20,8 +20,6 @@ import (
 	"github.com/perses/community-mixins/pkg/promql"
 	"github.com/perses/perses/go-sdk/dashboard"
 	panelgroup "github.com/perses/perses/go-sdk/panel-group"
-	listVar "github.com/perses/perses/go-sdk/variable/list-variable"
-	labelValuesVar "github.com/perses/plugins/prometheus/sdk/go/variable/label-values"
 	"github.com/prometheus/prometheus/model/labels"
 )
 
@@ -54,7 +52,6 @@ func withProxyNetworkProgrammingRateGroup(datasource string, labelMatcher promql
 func withProxyKubeAPIRequestsGroup(datasource string, labelMatcher promql.LabelMatcher) dashboard.Option {
 	// TODO(saswatamcode): Add a way to configure these.
 	labelMatchersToUse := []promql.LabelMatcher{
-		promql.ClusterVar,
 		promql.InstanceVar,
 		{
 			Name:  "job",
@@ -77,7 +74,6 @@ func withProxyKubeAPIRequestsGroup(datasource string, labelMatcher promql.LabelM
 func withProxyResources(datasource string, clusterLabelMatcher *labels.Matcher) dashboard.Option {
 	// TODO(saswatamcode): Add a way to configure these.
 	labelMatchersToUse := []*labels.Matcher{
-		promql.ClusterVarV2,
 		promql.InstanceVarV2,
 		{
 			Name:  "job",
@@ -100,22 +96,14 @@ func withProxyResources(datasource string, clusterLabelMatcher *labels.Matcher) 
 
 func BuildProxyOverview(project string, datasource string, clusterLabelName string, variableOverrides ...dashboard.Option) dashboards.DashboardResult {
 	defaultVars := []dashboard.Option{
-		dashboard.AddVariable("cluster",
-			listVar.List(
-				labelValuesVar.PrometheusLabelValues("cluster",
-					labelValuesVar.Matchers("up{"+panels.GetKubeProxyMatcher()+"}"),
-					dashboards.AddVariableDatasource(datasource),
-				),
-				listVar.DisplayName("cluster"),
-			),
-		),
+		dashboards.AddClusterVariable(datasource, clusterLabelName, "up{"+panels.GetKubeProxyMatcher()+"}"),
 		dashboard.AddVariable("instance",
 			listVar.List(
 				labelValuesVar.PrometheusLabelValues("instance",
 					labelValuesVar.Matchers(
 						promql.SetLabelMatchers(
 							"up{"+panels.GetKubeProxyMatcher()+"}",
-							[]promql.LabelMatcher{{Name: "cluster", Type: "=", Value: "$cluster"}},
+							[]promql.LabelMatcher{dashboards.GetClusterLabelMatcher(clusterLabelName)},
 						),
 					),
 					dashboards.AddVariableDatasource(datasource),

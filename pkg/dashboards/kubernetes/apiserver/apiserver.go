@@ -20,8 +20,6 @@ import (
 	"github.com/perses/community-mixins/pkg/promql"
 	"github.com/perses/perses/go-sdk/dashboard"
 	panelgroup "github.com/perses/perses/go-sdk/panel-group"
-	listVar "github.com/perses/perses/go-sdk/variable/list-variable"
-	labelValuesVar "github.com/perses/plugins/prometheus/sdk/go/variable/label-values"
 	"github.com/prometheus/prometheus/model/labels"
 )
 
@@ -76,7 +74,6 @@ func withWorkQueueGroup(datasource string, labelMatcher promql.LabelMatcher) das
 
 func withAPIServerResources(datasource string, clusterLabelMatcher *labels.Matcher) dashboard.Option {
 	labelMatchersToUse := []*labels.Matcher{
-		promql.ClusterVarV2,
 		promql.InstanceVarV2,
 		{
 			Name:  "job",
@@ -99,22 +96,14 @@ func withAPIServerResources(datasource string, clusterLabelMatcher *labels.Match
 
 func BuildAPIServerOverview(project string, datasource string, clusterLabelName string, variableOverrides ...dashboard.Option) dashboards.DashboardResult {
 	defaultVars := []dashboard.Option{
-		dashboard.AddVariable("cluster",
-			listVar.List(
-				labelValuesVar.PrometheusLabelValues("cluster",
-					labelValuesVar.Matchers("up{"+panels.GetAPIServerMatcher()+"}"),
-					dashboards.AddVariableDatasource(datasource),
-				),
-				listVar.DisplayName("cluster"),
-			),
-		),
+		dashboards.AddClusterVariable(datasource, clusterLabelName, "up{"+panels.GetAPIServerMatcher()+"}"),
 		dashboard.AddVariable("instance",
 			listVar.List(
 				labelValuesVar.PrometheusLabelValues("instance",
 					labelValuesVar.Matchers(
 						promql.SetLabelMatchers(
 							"up{"+panels.GetAPIServerMatcher()+"}",
-							[]promql.LabelMatcher{{Name: "cluster", Type: "=", Value: "$cluster"}},
+							[]promql.LabelMatcher{dashboards.GetClusterLabelMatcher(clusterLabelName)},
 						),
 					),
 					dashboards.AddVariableDatasource(datasource),

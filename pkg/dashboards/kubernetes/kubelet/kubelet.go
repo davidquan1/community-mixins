@@ -20,8 +20,6 @@ import (
 	"github.com/perses/community-mixins/pkg/promql"
 	"github.com/perses/perses/go-sdk/dashboard"
 	panelgroup "github.com/perses/perses/go-sdk/panel-group"
-	listVar "github.com/perses/perses/go-sdk/variable/list-variable"
-	labelValuesVar "github.com/perses/plugins/prometheus/sdk/go/variable/label-values"
 	"github.com/prometheus/prometheus/model/labels"
 )
 
@@ -115,7 +113,6 @@ func withRequestDurationQuantile(datasource string, labelMatcher promql.LabelMat
 func withKubeletResources(datasource string, clusterLabelMatcher *labels.Matcher) dashboard.Option {
 	// TODO(saswatamcode): Add a way to configure these.
 	labelMatchersToUse := []*labels.Matcher{
-		promql.ClusterVarV2,
 		promql.InstanceVarV2,
 		{
 			Name:  "job",
@@ -138,22 +135,14 @@ func withKubeletResources(datasource string, clusterLabelMatcher *labels.Matcher
 
 func BuildKubeletOverview(project string, datasource string, clusterLabelName string, variableOverrides ...dashboard.Option) dashboards.DashboardResult {
 	defaultVars := []dashboard.Option{
-		dashboard.AddVariable("cluster",
-			listVar.List(
-				labelValuesVar.PrometheusLabelValues("cluster",
-					labelValuesVar.Matchers("up{"+panels.GetKubeletMatcher()+"}"),
-					dashboards.AddVariableDatasource(datasource),
-				),
-				listVar.DisplayName("cluster"),
-			),
-		),
+		dashboards.AddClusterVariable(datasource, clusterLabelName, "up{"+panels.GetKubeletMatcher()+"}"),
 		dashboard.AddVariable("instance",
 			listVar.List(
 				labelValuesVar.PrometheusLabelValues("instance",
 					labelValuesVar.Matchers(
 						promql.SetLabelMatchers(
 							"up{"+panels.GetKubeletMatcher()+"}",
-							[]promql.LabelMatcher{{Name: "cluster", Type: "=", Value: "$cluster"}},
+							[]promql.LabelMatcher{dashboards.GetClusterLabelMatcher(clusterLabelName)},
 						),
 					),
 					dashboards.AddVariableDatasource(datasource),
