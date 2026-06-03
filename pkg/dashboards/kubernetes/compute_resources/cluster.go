@@ -132,15 +132,7 @@ func withClusterCurrentStorageIOGroup(datasource string, labelMatcher promql.Lab
 
 func BuildKubernetesClusterOverview(project string, datasource string, clusterLabelName string, variableOverrides ...dashboard.Option) dashboards.DashboardResult {
 	defaultVars := []dashboard.Option{
-		dashboard.AddVariable("cluster",
-			listVar.List(
-				labelValuesVar.PrometheusLabelValues("cluster",
-					labelValuesVar.Matchers("up{"+panels.GetKubeletMatcher()+"}"),
-					dashboards.AddVariableDatasource(datasource),
-				),
-				listVar.DisplayName("cluster"),
-			),
-		),
+		dashboards.AddClusterVariable(datasource, clusterLabelName, "up{"+panels.GetKubeletMatcher()+"}"),
 	}
 	clusterLabelMatcher := dashboards.GetClusterLabelMatcher(clusterLabelName)
 	vars := defaultVars

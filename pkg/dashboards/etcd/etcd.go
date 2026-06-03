@@ -82,15 +82,13 @@ func withRoundTripTimeGroup(datasource string, labelMatcher *labels.Matcher) das
 func withETCDResources(datasource string, clusterLabelMatcher *labels.Matcher) dashboard.Option {
 	// TODO(saswatamcode): Add a way to configure these.
 	labelMatchersToUse := []*labels.Matcher{
-		promql.ClusterVarV2,
 		{
 			Name:  "job",
 			Value: ".*etcd.*",
 			Type:  labels.MatchRegexp,
 		},
+		clusterLabelMatcher,
 	}
-
-	labelMatchersToUse = append(labelMatchersToUse, clusterLabelMatcher)
 
 	return dashboard.AddPanelGroup("Resource Usage",
 		panelgroup.PanelsPerLine(2),
@@ -108,19 +106,11 @@ func BuildETCDOverview(project string, datasource string, clusterLabelName strin
 		dashboard.New("etcd-overview",
 			dashboard.ProjectName(project),
 			dashboard.Name("etcd / Overview"),
-			dashboard.AddVariable("cluster",
-				listVar.List(
-					labelValuesVar.PrometheusLabelValues("cluster",
-						labelValuesVar.Matchers(
-							promql.SetLabelMatchersV2(
-								vector.New(vector.WithMetricName("etcd_server_has_leader")),
-								[]*labels.Matcher{clusterLabelMatcher, {Name: "job", Type: labels.MatchRegexp, Value: ".*etcd.*"}},
-							).Pretty(0),
-						),
-						dashboards.AddVariableDatasource(datasource),
-					),
-					listVar.DisplayName("cluster"),
-				),
+			dashboards.AddClusterVariable(datasource, clusterLabelName,
+				promql.SetLabelMatchersV2(
+					vector.New(vector.WithMetricName("etcd_server_has_leader")),
+					[]*labels.Matcher{{Name: "job", Type: labels.MatchRegexp, Value: ".*etcd.*"}},
+				).Pretty(0),
 			),
 			withETCDStatsGroup(datasource, clusterLabelMatcher),
 			withRPCGroup(datasource, clusterLabelMatcher),

@@ -29,42 +29,42 @@ var (
 
 // GetCAdvisorMatcher returns the matcher for the cadvisor job.
 func GetCAdvisorMatcher() string {
-	return "job=\"" + CADVISOR_LABEL_VALUE + "\""
+	return "job=~\".*" + CADVISOR_LABEL_VALUE + ".*\""
 }
 
 // GetKubeStateMetricsMatcher returns the matcher for the kube-state-metrics job.
 func GetKubeStateMetricsMatcher() string {
-	return "job=\"" + KUBE_STATE_METRICS_LABEL_VALUE + "\""
+	return "job=~\".*" + KUBE_STATE_METRICS_LABEL_VALUE + ".*\""
 }
 
 // GetKubeletMatcher returns the matcher for the kubelet job.
 func GetKubeletMatcher() string {
-	return "job=\"" + KUBELET_LABEL_VALUE + "\""
+	return "job=~\".*" + KUBELET_LABEL_VALUE + ".*\""
 }
 
 // GetAPIServerMatcher returns the matcher for the api server job.
 func GetAPIServerMatcher() string {
-	return "job=\"" + API_SERVER_LABEL_VALUE + "\""
+	return "job=~\".*" + API_SERVER_LABEL_VALUE + ".*\""
 }
 
 // GetNodeExporterMatcher returns the matcher for the node-exporter job.
 func GetNodeExporterMatcher() string {
-	return "job=\"" + NODE_EXPORTER_LABEL_VALUE + "\""
+	return "job=~\".*" + NODE_EXPORTER_LABEL_VALUE + ".*\""
 }
 
 // GetControllerManagerMatcher returns the matcher for the controller-manager job.
 func GetControllerManagerMatcher() string {
-	return "job=\"" + CONTROLLER_MANAGER_LABEL_VALUE + "\""
+	return "job=~\".*" + CONTROLLER_MANAGER_LABEL_VALUE + ".*\""
 }
 
 // GetSchedulerMatcher returns the matcher for the scheduler job.
 func GetSchedulerMatcher() string {
-	return "job=\"" + KUBE_SCHEDULER_LABEL_VALUE + "\""
+	return "job=~\".*" + KUBE_SCHEDULER_LABEL_VALUE + ".*\""
 }
 
 // GetKubeProxyMatcher returns the matcher for the kube-proxy job.
 func GetKubeProxyMatcher() string {
-	return "job=\"" + KUBE_PROXY_LABEL_VALUE + "\""
+	return "job=~\".*" + KUBE_PROXY_LABEL_VALUE + ".*\""
 }
 
 // NOTE: Matcher setter functions have been removed since matchers are now computed dynamically.

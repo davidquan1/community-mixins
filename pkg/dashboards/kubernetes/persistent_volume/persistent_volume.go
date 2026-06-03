@@ -44,22 +44,14 @@ func withPVInodesUsageGroup(datasource string, labelMatcher promql.LabelMatcher)
 
 func BuildKubernetesPersistentVolumeOverview(project string, datasource string, clusterLabelName string, variableOverrides ...dashboard.Option) dashboards.DashboardResult {
 	defaultVars := []dashboard.Option{
-		dashboard.AddVariable("cluster",
-			listVar.List(
-				labelValuesVar.PrometheusLabelValues("cluster",
-					labelValuesVar.Matchers("kubelet_volume_stats_capacity_bytes{"+panels.GetKubeletMatcher()+"}"),
-					dashboards.AddVariableDatasource(datasource),
-				),
-				listVar.DisplayName("cluster"),
-			),
-		),
+		dashboards.AddClusterVariable(datasource, clusterLabelName, "kubelet_volume_stats_capacity_bytes{"+panels.GetKubeletMatcher()+"}"),
 		dashboard.AddVariable("namespace",
 			listVar.List(
 				labelValuesVar.PrometheusLabelValues("namespace",
 					labelValuesVar.Matchers(
 						promql.SetLabelMatchers(
 							"kubelet_volume_stats_capacity_bytes{"+panels.GetKubeletMatcher()+"}",
-							[]promql.LabelMatcher{{Name: "cluster", Type: "=", Value: "$cluster"}},
+							[]promql.LabelMatcher{dashboards.GetClusterLabelMatcher(clusterLabelName)},
 						),
 					),
 					dashboards.AddVariableDatasource(datasource),
@@ -74,7 +66,7 @@ func BuildKubernetesPersistentVolumeOverview(project string, datasource string, 
 						promql.SetLabelMatchers(
 							"kubelet_volume_stats_capacity_bytes{"+panels.GetKubeletMatcher()+"}",
 							[]promql.LabelMatcher{
-								{Name: "cluster", Type: "=", Value: "$cluster"},
+								dashboards.GetClusterLabelMatcher(clusterLabelName),
 								{Name: "namespace", Type: "=", Value: "$namespace"},
 							},
 						),

@@ -28,7 +28,7 @@ func SetLabelMatchersV2(query parser.Expr, matchers []*labels.Matcher) parser.Ex
 }
 
 func LabelsSetPromQLV2(query parser.Expr, matchType labels.MatchType, name, value string) parser.Expr {
-	if name == "" || value == "" {
+	if name == "" {
 		return query
 	}
 
@@ -37,12 +37,18 @@ func LabelsSetPromQLV2(query parser.Expr, matchType labels.MatchType, name, valu
 			var found bool
 			for i, l := range n.LabelMatchers {
 				if l.Name == name {
-					n.LabelMatchers[i].Type = matchType
-					n.LabelMatchers[i].Value = value
+					if value == "" {
+						// Remove the matcher
+						n.LabelMatchers = append(n.LabelMatchers[:i], n.LabelMatchers[i+1:]...)
+					} else {
+						n.LabelMatchers[i].Type = matchType
+						n.LabelMatchers[i].Value = value
+					}
 					found = true
+					break
 				}
 			}
-			if !found {
+			if !found && value != "" {
 				n.LabelMatchers = append(n.LabelMatchers, &labels.Matcher{
 					Type:  matchType,
 					Name:  name,

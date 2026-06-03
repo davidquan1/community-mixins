@@ -119,22 +119,14 @@ func withPodCurrentStorageIOGroup(datasource string, labelMatcher promql.LabelMa
 
 func BuildKubernetesPodOverview(project string, datasource string, clusterLabelName string, variableOverrides ...dashboard.Option) dashboards.DashboardResult {
 	defaultVars := []dashboard.Option{
-		dashboard.AddVariable("cluster",
-			listVar.List(
-				labelValuesVar.PrometheusLabelValues("cluster",
-					labelValuesVar.Matchers("up{"+panels.GetKubeletMatcher()+"}"),
-					dashboards.AddVariableDatasource(datasource),
-				),
-				listVar.DisplayName("cluster"),
-			),
-		),
+		dashboards.AddClusterVariable(datasource, clusterLabelName, "up{"+panels.GetKubeletMatcher()+"}"),
 		dashboard.AddVariable("namespace",
 			listVar.List(
 				labelValuesVar.PrometheusLabelValues("namespace",
 					labelValuesVar.Matchers(
 						promql.SetLabelMatchers(
 							"kube_namespace_status_phase{"+panels.GetKubeStateMetricsMatcher()+"}",
-							[]promql.LabelMatcher{{Name: "cluster", Type: "=", Value: "$cluster"}},
+							[]promql.LabelMatcher{dashboards.GetClusterLabelMatcher(clusterLabelName)},
 						),
 					),
 					dashboards.AddVariableDatasource(datasource),
@@ -149,7 +141,7 @@ func BuildKubernetesPodOverview(project string, datasource string, clusterLabelN
 						promql.SetLabelMatchers(
 							"kube_pod_info{"+panels.GetKubeStateMetricsMatcher()+"}",
 							[]promql.LabelMatcher{
-								{Name: "cluster", Type: "=", Value: "$cluster"},
+								dashboards.GetClusterLabelMatcher(clusterLabelName),
 								{Name: "namespace", Type: "=", Value: "$namespace"},
 							},
 						),

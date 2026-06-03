@@ -74,7 +74,31 @@ func AddClusterVariable(datasource, clusterLabelName, matcher string) dashboard.
 	)
 }
 
+func AddClusterVariableV2(datasource, clusterLabelName, matcher string) dashboard.Option {
+	if clusterLabelName == "" {
+		return func(builder *dashboard.Builder) error {
+			return nil
+		}
+	}
+	return dashboard.AddVariable("cluster",
+		listVar.List(
+			labelValuesVar.PrometheusLabelValues(clusterLabelName,
+				labelValuesVar.Matchers(matcher),
+				AddVariableDatasource(datasource),
+			),
+			listVar.DisplayName(clusterLabelName),
+		),
+	)
+}
+
 func GetClusterLabelMatcher(clusterLabelName string) promql.LabelMatcher {
+	if clusterLabelName == "" {
+		return promql.LabelMatcher{
+			Name:  "cluster",
+			Value: "",
+			Type:  "=",
+		}
+	}
 	return promql.LabelMatcher{
 		Name:  clusterLabelName,
 		Value: "$cluster",
@@ -83,6 +107,13 @@ func GetClusterLabelMatcher(clusterLabelName string) promql.LabelMatcher {
 }
 
 func GetClusterLabelMatcherV2(clusterLabelName string) *labels.Matcher {
+	if clusterLabelName == "" {
+		return &labels.Matcher{
+			Name:  "cluster",
+			Value: "",
+			Type:  labels.MatchEqual,
+		}
+	}
 	return &labels.Matcher{
 		Name:  clusterLabelName,
 		Value: "$cluster",

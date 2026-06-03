@@ -150,12 +150,18 @@ func LabelsSetPromQL(query, labelMatchType, name, value string, processor *Perse
 			var found bool
 			for i, l := range n.LabelMatchers {
 				if l.Name == name {
-					n.LabelMatchers[i].Type = matchType
-					n.LabelMatchers[i].Value = value
+					if value == "" {
+						// Remove the matcher
+						n.LabelMatchers = append(n.LabelMatchers[:i], n.LabelMatchers[i+1:]...)
+					} else {
+						n.LabelMatchers[i].Type = matchType
+						n.LabelMatchers[i].Value = value
+					}
 					found = true
+					break
 				}
 			}
-			if !found {
+			if !found && value != "" {
 				n.LabelMatchers = append(n.LabelMatchers, &labels.Matcher{
 					Type:  matchType,
 					Name:  name,

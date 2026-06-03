@@ -48,6 +48,7 @@ var (
 	project          string
 	datasource       string
 	clusterLabelName string
+	singleCluster    bool
 	buildRules       bool
 
 	// Job label overrides
@@ -66,6 +67,7 @@ func main() {
 	flag.StringVar(&project, "project", "default", "The project name")
 	flag.StringVar(&datasource, "datasource", "", "The datasource name")
 	flag.StringVar(&clusterLabelName, "cluster-label-name", "", "The cluster label name")
+	flag.BoolVar(&singleCluster, "single-cluster", false, "Whether to build dashboards for a single cluster")
 	flag.BoolVar(&buildRules, "build-rules", false, "Whether to build rules")
 
 	flag.String("output-rules", rules.YAMLOutput, "output format of the rule exec")
@@ -88,6 +90,10 @@ func main() {
 	flag.StringVar(&kubeProxyJob, "kube-proxy-job", "kube-proxy", "The job label value for kube-proxy")
 
 	flag.Parse()
+
+	if singleCluster {
+		clusterLabelName = ""
+	}
 
 	// Apply job label overrides
 	nodeExporterPanels.SetNodeExporterLabelValue(nodeExporterJob)
