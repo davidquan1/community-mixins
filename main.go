@@ -66,7 +66,7 @@ var (
 func main() {
 	flag.StringVar(&project, "project", "default", "The project name")
 	flag.StringVar(&datasource, "datasource", "", "The datasource name")
-	flag.StringVar(&clusterLabelName, "cluster-label-name", "", "The cluster label name")
+	flag.StringVar(&clusterLabelName, "cluster-label-name", "cluster", "The cluster label name")
 	flag.BoolVar(&singleCluster, "single-cluster", false, "Whether to build dashboards for a single cluster")
 	flag.BoolVar(&buildRules, "build-rules", false, "Whether to build rules")
 

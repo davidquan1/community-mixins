@@ -45,6 +45,31 @@
         "kind": "ListVariable",
         "spec": {
           "display": {
+            "name": "cluster",
+            "hidden": false
+          },
+          "allowAllValue": false,
+          "allowMultiple": false,
+          "plugin": {
+            "kind": "PrometheusLabelValuesVariable",
+            "spec": {
+              "datasource": {
+                "kind": "PrometheusDatasource",
+                "name": "prometheus-datasource"
+              },
+              "labelName": "cluster",
+              "matchers": [
+                "alertmanager_alerts{}"
+              ]
+            }
+          },
+          "name": "cluster"
+        }
+      },
+      {
+        "kind": "ListVariable",
+        "spec": {
+          "display": {
             "name": "integration",
             "hidden": false
           },
@@ -59,7 +84,7 @@
               },
               "labelName": "integration",
               "matchers": [
-                "alertmanager_notifications_total{job=\"$job\"}"
+                "alertmanager_notifications_total{cluster=\"$cluster\",job=\"$job\"}"
               ]
             }
           },
@@ -106,7 +131,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (instance) (alertmanager_alerts{job=~\"$job\"})",
+                    "query": "sum by (instance) (alertmanager_alerts{cluster=\"$cluster\",job=~\"$job\"})",
                     "seriesNameFormat": "{{instance}} - Alertmanager - Alerts"
                   }
                 }
@@ -154,7 +179,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (job, instance) (rate(alertmanager_alerts_received_total{job=~\"$job\"}[$__rate_interval]))",
+                    "query": "sum by (job, instance) (\n  rate(alertmanager_alerts_received_total{cluster=\"$cluster\",job=~\"$job\"}[$__rate_interval])\n)",
                     "seriesNameFormat": "{{instance}} - Alertmanager - Received"
                   }
                 }
@@ -170,7 +195,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (job, instance) (rate(alertmanager_alerts_invalid_total{job=~\"$job\"}[$__rate_interval]))",
+                    "query": "sum by (job, instance) (\n  rate(alertmanager_alerts_invalid_total{cluster=\"$cluster\",job=~\"$job\"}[$__rate_interval])\n)",
                     "seriesNameFormat": "{{instance}} - Alertmanager - Invalid"
                   }
                 }
@@ -218,7 +243,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (integration, instance) (\n  rate(alertmanager_notifications_total{integration=~\"$integration\",job=~\"$job\"}[$__rate_interval])\n)",
+                    "query": "sum by (integration, instance) (\n  rate(\n    alertmanager_notifications_total{cluster=\"$cluster\",integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{instance}} - {{integration}} - Total"
                   }
                 }
@@ -234,7 +259,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (integration, instance) (\n  rate(\n    alertmanager_notifications_failed_total{integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (integration, instance) (\n  rate(\n    alertmanager_notifications_failed_total{cluster=\"$cluster\",integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{instance}} - {{integration}} - Failed"
                   }
                 }
@@ -286,7 +311,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (le, integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_bucket{integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (le, integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_bucket{cluster=\"$cluster\",integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{instance}} - {{integration}} - 99th Percentile"
                   }
                 }
@@ -302,7 +327,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (le, integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_bucket{integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (le, integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_bucket{cluster=\"$cluster\",integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{instance}} - {{integration}} - Median"
                   }
                 }
@@ -318,7 +343,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_sum{integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_count{integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_sum{cluster=\"$cluster\",integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (integration, instance) (\n    rate(\n      alertmanager_notification_latency_seconds_count{cluster=\"$cluster\",integration=~\"$integration\",job=~\"$job\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "{{instance}} - {{integration}} - Average"
                   }
                 }

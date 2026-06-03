@@ -248,7 +248,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                      kube_pod_container_resource_requests{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="cpu"}
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="cpu"}
                     * on (namespace, pod) group_left (workload, workload_type)
                       namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                   )
@@ -268,7 +268,7 @@ spec:
                     )
                   /
                     sum by (pod) (
-                        kube_pod_container_resource_requests{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="cpu"}
+                        kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="cpu"}
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                     )
@@ -282,7 +282,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                      kube_pod_container_resource_limits{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="cpu"}
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="cpu"}
                     * on (namespace, pod) group_left (workload, workload_type)
                       namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                   )
@@ -302,7 +302,7 @@ spec:
                     )
                   /
                     sum by (pod) (
-                        kube_pod_container_resource_limits{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="cpu"}
+                        kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="cpu"}
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                     )
@@ -417,7 +417,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                      kube_pod_container_resource_requests{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="memory"}
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="memory"}
                     * on (namespace, pod) group_left (workload, workload_type)
                       namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                   )
@@ -437,7 +437,7 @@ spec:
                     )
                   /
                     sum by (pod) (
-                        kube_pod_container_resource_requests{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="memory"}
+                        kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="memory"}
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                     )
@@ -451,7 +451,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                      kube_pod_container_resource_limits{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="memory"}
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="memory"}
                     * on (namespace, pod) group_left (workload, workload_type)
                       namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                   )
@@ -471,7 +471,7 @@ spec:
                     )
                   /
                     sum by (pod) (
-                        kube_pod_container_resource_limits{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="memory"}
+                        kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="memory"}
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload="$workload",workload_type=~"$type"}
                     )
@@ -536,7 +536,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_receive_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_receive_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -554,7 +554,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_transmit_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_transmit_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -572,7 +572,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_receive_packets_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_receive_packets_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -590,7 +590,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_transmit_packets_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_transmit_packets_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -608,7 +608,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_receive_packets_dropped_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_receive_packets_dropped_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -626,7 +626,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_transmit_packets_dropped_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_transmit_packets_dropped_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -667,7 +667,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_receive_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_receive_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -709,7 +709,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_transmit_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_transmit_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -751,7 +751,7 @@ spec:
                   (
                     avg by (pod) (
                         rate(
-                          container_network_receive_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_receive_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -793,7 +793,7 @@ spec:
                   (
                     avg by (pod) (
                         rate(
-                          container_network_transmit_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_transmit_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -835,7 +835,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_receive_packets_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_receive_packets_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -877,7 +877,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_transmit_packets_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_transmit_packets_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -919,7 +919,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_receive_packets_dropped_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_receive_packets_dropped_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -961,7 +961,7 @@ spec:
                   (
                     sum by (pod) (
                         rate(
-                          container_network_transmit_packets_dropped_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                          container_network_transmit_packets_dropped_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                         )
                       * on (namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~"$workload",workload_type=~"$type"}
@@ -985,7 +985,7 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - up{job="kubelet"}
+          - up{job=~".*kubelet.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -1002,7 +1002,7 @@ spec:
             name: custom-datasource
           labelName: namespace
           matchers:
-          - kube_namespace_status_phase{cluster="$cluster",job="kube-state-metrics"}
+          - kube_namespace_status_phase{cluster="$cluster",job=~".*kube-state-metrics.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false

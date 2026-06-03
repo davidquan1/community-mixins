@@ -122,7 +122,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: sum(cluster:node_cpu:ratio_rate5m) / count(cluster:node_cpu:ratio_rate5m)
+                query: |2-
+                    sum(cluster:node_cpu:ratio_rate5m{cluster="$cluster"})
+                  /
+                    count(cluster:node_cpu:ratio_rate5m{cluster="$cluster"})
     "0_1":
       kind: Panel
       spec:
@@ -147,9 +150,11 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    sum(kube_pod_container_resource_requests{job="kube-state-metrics",resource="cpu"})
+                    sum(
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"}
+                    )
                   /
-                    sum(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"})
+                    sum(kube_node_status_allocatable{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"})
     "0_2":
       kind: Panel
       spec:
@@ -174,9 +179,11 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    sum(kube_pod_container_resource_limits{job="kube-state-metrics",resource="cpu"})
+                    sum(
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"}
+                    )
                   /
-                    sum(kube_node_status_allocatable{job="kube-state-metrics",resource="cpu"})
+                    sum(kube_node_status_allocatable{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"})
     "0_3":
       kind: Panel
       spec:
@@ -200,7 +207,12 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: 1 - sum(:node_memory_MemAvailable_bytes:sum) / sum(node_memory_MemTotal_bytes{job="node-exporter"})
+                query: |2-
+                    1
+                  -
+                      sum(:node_memory_MemAvailable_bytes:sum{cluster="$cluster"})
+                    /
+                      sum(node_memory_MemTotal_bytes{cluster="$cluster",job=~".*node-exporter.*"})
     "0_4":
       kind: Panel
       spec:
@@ -225,9 +237,13 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    sum(kube_pod_container_resource_requests{job="kube-state-metrics",resource="memory"})
+                    sum(
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                    )
                   /
-                    sum(kube_node_status_allocatable{job="kube-state-metrics",resource="memory"})
+                    sum(
+                      kube_node_status_allocatable{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                    )
     "0_5":
       kind: Panel
       spec:
@@ -252,9 +268,13 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    sum(kube_pod_container_resource_limits{job="kube-state-metrics",resource="memory"})
+                    sum(
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                    )
                   /
-                    sum(kube_node_status_allocatable{job="kube-state-metrics",resource="memory"})
+                    sum(
+                      kube_node_status_allocatable{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                    )
     "1_0":
       kind: Panel
       spec:
@@ -286,7 +306,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: sum by (cluster) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m)
+                query: |-
+                  sum by (cluster) (
+                    node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m{cluster="$cluster"}
+                  )
                 seriesNameFormat: '{{cluster}}'
     "2_0":
       kind: Panel
@@ -346,7 +369,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: sum by (cluster) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m)
+                query: |-
+                  sum by (cluster) (
+                    node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m{cluster="$cluster"}
+                  )
         - kind: TimeSeriesQuery
           spec:
             plugin:
@@ -355,28 +381,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: sum by (cluster) (kube_pod_container_resource_requests{job="kube-state-metrics",resource="cpu"})
-        - kind: TimeSeriesQuery
-          spec:
-            plugin:
-              kind: PrometheusTimeSeriesQuery
-              spec:
-                datasource:
-                  kind: PrometheusDatasource
-                  name: prometheus-datasource
-                query: |2-
-                    sum by (cluster) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m)
-                  /
-                    sum by (cluster) (kube_pod_container_resource_requests{job="kube-state-metrics",resource="cpu"})
-        - kind: TimeSeriesQuery
-          spec:
-            plugin:
-              kind: PrometheusTimeSeriesQuery
-              spec:
-                datasource:
-                  kind: PrometheusDatasource
-                  name: prometheus-datasource
-                query: sum by (cluster) (kube_pod_container_resource_limits{job="kube-state-metrics",resource="cpu"})
+                query: |-
+                  sum by (cluster) (
+                    kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"}
+                  )
         - kind: TimeSeriesQuery
           spec:
             plugin:
@@ -386,9 +394,41 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    sum by (cluster) (node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m)
+                    sum by (cluster) (
+                      node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m{cluster="$cluster"}
+                    )
                   /
-                    sum by (cluster) (kube_pod_container_resource_limits{job="kube-state-metrics",resource="cpu"})
+                    sum by (cluster) (
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"}
+                    )
+        - kind: TimeSeriesQuery
+          spec:
+            plugin:
+              kind: PrometheusTimeSeriesQuery
+              spec:
+                datasource:
+                  kind: PrometheusDatasource
+                  name: prometheus-datasource
+                query: |-
+                  sum by (cluster) (
+                    kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"}
+                  )
+        - kind: TimeSeriesQuery
+          spec:
+            plugin:
+              kind: PrometheusTimeSeriesQuery
+              spec:
+                datasource:
+                  kind: PrometheusDatasource
+                  name: prometheus-datasource
+                query: |2-
+                    sum by (cluster) (
+                      node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate5m{cluster="$cluster"}
+                    )
+                  /
+                    sum by (cluster) (
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",resource="cpu"}
+                    )
     "3_0":
       kind: Panel
       spec:
@@ -420,7 +460,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: sum by (cluster) (container_memory_rss{container!="",job="cadvisor"})
+                query: sum by (cluster) (container_memory_rss{cluster="$cluster",container!="",job=~".*cadvisor.*"})
                 seriesNameFormat: '{{cluster}}'
     "4_0":
       kind: Panel
@@ -477,7 +517,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: sum by (cluster) (container_memory_rss{container!="",job="cadvisor"})
+                query: sum by (cluster) (container_memory_rss{cluster="$cluster",container!="",job=~".*cadvisor.*"})
         - kind: TimeSeriesQuery
           spec:
             plugin:
@@ -486,28 +526,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: sum by (cluster) (kube_pod_container_resource_requests{job="kube-state-metrics",resource="memory"})
-        - kind: TimeSeriesQuery
-          spec:
-            plugin:
-              kind: PrometheusTimeSeriesQuery
-              spec:
-                datasource:
-                  kind: PrometheusDatasource
-                  name: prometheus-datasource
-                query: |2-
-                    sum by (cluster) (container_memory_rss{container!="",job="cadvisor"})
-                  /
-                    sum by (cluster) (kube_pod_container_resource_requests{job="kube-state-metrics",resource="memory"})
-        - kind: TimeSeriesQuery
-          spec:
-            plugin:
-              kind: PrometheusTimeSeriesQuery
-              spec:
-                datasource:
-                  kind: PrometheusDatasource
-                  name: prometheus-datasource
-                query: sum by (cluster) (kube_pod_container_resource_limits{job="kube-state-metrics",resource="memory"})
+                query: |-
+                  sum by (cluster) (
+                    kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                  )
         - kind: TimeSeriesQuery
           spec:
             plugin:
@@ -517,7 +539,35 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    sum by (cluster) (container_memory_rss{container!="",job="cadvisor"})
+                    sum by (cluster) (container_memory_rss{cluster="$cluster",container!="",job=~".*cadvisor.*"})
                   /
-                    sum by (cluster) (kube_pod_container_resource_limits{job="kube-state-metrics",resource="memory"})
+                    sum by (cluster) (
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                    )
+        - kind: TimeSeriesQuery
+          spec:
+            plugin:
+              kind: PrometheusTimeSeriesQuery
+              spec:
+                datasource:
+                  kind: PrometheusDatasource
+                  name: prometheus-datasource
+                query: |-
+                  sum by (cluster) (
+                    kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                  )
+        - kind: TimeSeriesQuery
+          spec:
+            plugin:
+              kind: PrometheusTimeSeriesQuery
+              spec:
+                datasource:
+                  kind: PrometheusDatasource
+                  name: prometheus-datasource
+                query: |2-
+                    sum by (cluster) (container_memory_rss{cluster="$cluster",container!="",job=~".*cadvisor.*"})
+                  /
+                    sum by (cluster) (
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",resource="memory"}
+                    )
 status: {}

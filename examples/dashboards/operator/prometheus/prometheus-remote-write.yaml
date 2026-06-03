@@ -156,9 +156,9 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    prometheus_remote_storage_highest_timestamp_in_seconds{instance=~"$instance"}
+                    prometheus_remote_storage_highest_timestamp_in_seconds{cluster="$cluster",instance=~"$instance"}
                   - ignoring (remote_name, url) group_right (instance)
-                      prometheus_remote_storage_queue_highest_sent_timestamp_seconds{instance=~"$instance",url="$url"}
+                      prometheus_remote_storage_queue_highest_sent_timestamp_seconds{cluster="$cluster",instance=~"$instance",url="$url"}
                     !=
                       0
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Segment'
@@ -186,11 +186,11 @@ spec:
                 query: |-
                   clamp_min(
                       rate(
-                        prometheus_remote_storage_highest_timestamp_in_seconds{instance=~"$instance"}[$__rate_interval]
+                        prometheus_remote_storage_highest_timestamp_in_seconds{cluster="$cluster",instance=~"$instance"}[$__rate_interval]
                       )
                     - ignoring (remote_name, url) group_right (instance)
                       rate(
-                        prometheus_remote_storage_queue_highest_sent_timestamp_seconds{instance=~"$instance",url="$url"}[$__rate_interval]
+                        prometheus_remote_storage_queue_highest_sent_timestamp_seconds{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                       ),
                     0
                   )
@@ -217,20 +217,24 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    rate(prometheus_remote_storage_samples_in_total{instance=~"$instance"}[$__rate_interval])
+                    rate(
+                      prometheus_remote_storage_samples_in_total{cluster="$cluster",instance=~"$instance"}[$__rate_interval]
+                    )
                   - ignoring (remote_name, url) group_right (instance)
                         rate(
-                          prometheus_remote_storage_succeeded_samples_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                          prometheus_remote_storage_succeeded_samples_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                         )
                       or
-                        rate(prometheus_remote_storage_samples_total{instance=~"$instance",url="$url"}[$__rate_interval])
+                        rate(
+                          prometheus_remote_storage_samples_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
+                        )
                     -
                         rate(
-                          prometheus_remote_storage_dropped_samples_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                          prometheus_remote_storage_dropped_samples_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                         )
                       or
                         rate(
-                          prometheus_remote_storage_samples_dropped_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                          prometheus_remote_storage_samples_dropped_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                         )
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "2_0":
@@ -254,7 +258,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: prometheus_remote_storage_shards{instance=~"$instance",url="$url"}
+                query: prometheus_remote_storage_shards{cluster="$cluster",instance=~"$instance",url="$url"}
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "2_1":
       kind: Panel
@@ -277,7 +281,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: prometheus_remote_storage_shards_desired{instance=~"$instance",url="$url"}
+                query: prometheus_remote_storage_shards_desired{cluster="$cluster",instance=~"$instance",url="$url"}
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "2_2":
       kind: Panel
@@ -300,7 +304,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: prometheus_remote_storage_shards_max{instance=~"$instance",url="$url"}
+                query: prometheus_remote_storage_shards_max{cluster="$cluster",instance=~"$instance",url="$url"}
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "2_3":
       kind: Panel
@@ -323,7 +327,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: prometheus_remote_storage_shards_min{instance=~"$instance",url="$url"}
+                query: prometheus_remote_storage_shards_min{cluster="$cluster",instance=~"$instance",url="$url"}
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "3_0":
       kind: Panel
@@ -346,7 +350,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: prometheus_remote_storage_shard_capacity{instance=~"$instance",url="$url"}
+                query: prometheus_remote_storage_shard_capacity{cluster="$cluster",instance=~"$instance",url="$url"}
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "3_1":
       kind: Panel
@@ -370,9 +374,9 @@ spec:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
                 query: |2-
-                    prometheus_remote_storage_pending_samples{instance=~"$instance",url="$url"}
+                    prometheus_remote_storage_pending_samples{cluster="$cluster",instance=~"$instance",url="$url"}
                   or
-                    prometheus_remote_storage_samples_pending{instance=~"$instance",url="$url"}
+                    prometheus_remote_storage_samples_pending{cluster="$cluster",instance=~"$instance",url="$url"}
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "4_0":
       kind: Panel
@@ -395,7 +399,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: prometheus_tsdb_wal_segment_current{instance=~"$instance"}
+                query: prometheus_tsdb_wal_segment_current{cluster="$cluster",instance=~"$instance"}
                 seriesNameFormat: '{{instance}} - Segment - Metrics'
     "4_1":
       kind: Panel
@@ -418,7 +422,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: prometheus_wal_watcher_current_segment{instance=~"$instance"}
+                query: prometheus_wal_watcher_current_segment{cluster="$cluster",instance=~"$instance"}
                 seriesNameFormat: '{{instance}} - Segment - Metrics'
     "5_0":
       kind: Panel
@@ -443,11 +447,11 @@ spec:
                   name: prometheus-datasource
                 query: |2-
                     rate(
-                      prometheus_remote_storage_dropped_samples_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                      prometheus_remote_storage_dropped_samples_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                     )
                   or
                     rate(
-                      prometheus_remote_storage_samples_dropped_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                      prometheus_remote_storage_samples_dropped_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                     )
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "5_1":
@@ -473,11 +477,11 @@ spec:
                   name: prometheus-datasource
                 query: |2-
                     rate(
-                      prometheus_remote_storage_failed_samples_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                      prometheus_remote_storage_failed_samples_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                     )
                   or
                     rate(
-                      prometheus_remote_storage_samples_failed_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                      prometheus_remote_storage_samples_failed_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                     )
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "5_2":
@@ -503,11 +507,11 @@ spec:
                   name: prometheus-datasource
                 query: |2-
                     rate(
-                      prometheus_remote_storage_retried_samples_total{instance=~"$instance",url="$url"}[$__rate_interval]
+                      prometheus_remote_storage_retried_samples_total{cluster="$cluster",instance=~"$instance",url="$url"}[$__rate_interval]
                     )
                   or
                     rate(
-                      prometheus_remote_storage_samples_retried_total{instance=~"$instance",url=~"$url"}[$__rate_interval]
+                      prometheus_remote_storage_samples_retried_total{cluster="$cluster",instance=~"$instance",url=~"$url"}[$__rate_interval]
                     )
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
     "5_3":
@@ -533,10 +537,27 @@ spec:
                   name: prometheus-datasource
                 query: |-
                   rate(
-                    prometheus_remote_storage_enqueue_retries_total{instance=~"$instance",url=~"$url"}[$__rate_interval]
+                    prometheus_remote_storage_enqueue_retries_total{cluster="$cluster",instance=~"$instance",url=~"$url"}[$__rate_interval]
                   )
                 seriesNameFormat: '{{instance}} - {{remote_name}} - {{url}} - Metrics'
   variables:
+  - kind: ListVariable
+    spec:
+      allowAllValue: false
+      allowMultiple: false
+      display:
+        hidden: false
+        name: cluster
+      name: cluster
+      plugin:
+        kind: PrometheusLabelValuesVariable
+        spec:
+          datasource:
+            kind: PrometheusDatasource
+            name: prometheus-datasource
+          labelName: cluster
+          matchers:
+          - prometheus_remote_storage_shards{}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -553,7 +574,7 @@ spec:
             name: prometheus-datasource
           labelName: instance
           matchers:
-          - prometheus_remote_storage_shards{}
+          - prometheus_remote_storage_shards{cluster="$cluster"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -570,5 +591,5 @@ spec:
             name: prometheus-datasource
           labelName: url
           matchers:
-          - prometheus_remote_storage_shards{instance="$instance"}
+          - prometheus_remote_storage_shards{cluster="$cluster",instance="$instance"}
 status: {}

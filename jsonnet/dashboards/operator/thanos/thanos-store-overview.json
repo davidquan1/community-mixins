@@ -45,6 +45,31 @@
         "kind": "ListVariable",
         "spec": {
           "display": {
+            "name": "cluster",
+            "hidden": false
+          },
+          "allowAllValue": false,
+          "allowMultiple": false,
+          "plugin": {
+            "kind": "PrometheusLabelValuesVariable",
+            "spec": {
+              "datasource": {
+                "kind": "PrometheusDatasource",
+                "name": "prometheus-datasource"
+              },
+              "labelName": "cluster",
+              "matchers": [
+                "thanos_build_info{}"
+              ]
+            }
+          },
+          "name": "cluster"
+        }
+      },
+      {
+        "kind": "ListVariable",
+        "spec": {
+          "display": {
             "name": "namespace",
             "hidden": false
           },
@@ -109,7 +134,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, grpc_method, grpc_code) (\n  rate(\n    grpc_server_handled_total{grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (namespace, job, grpc_method, grpc_code) (\n  rate(\n    grpc_server_handled_total{cluster=\"$cluster\",grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}"
                   }
                 }
@@ -159,7 +184,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (namespace, job, grpc_code) (\n    rate(\n      grpc_server_handled_total{grpc_code=~\"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss\",grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/ ignoring (grpc_code) group_left ()\n  sum by (namespace, job) (\n    rate(\n      grpc_server_handled_total{grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (namespace, job, grpc_code) (\n    rate(\n      grpc_server_handled_total{cluster=\"$cluster\",grpc_code=~\"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss\",grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/ ignoring (grpc_code) group_left ()\n  sum by (namespace, job) (\n    rate(\n      grpc_server_handled_total{cluster=\"$cluster\",grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}"
                   }
                 }
@@ -208,7 +233,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{cluster=\"$cluster\",grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{namespace}} {{job}}"
                   }
                 }
@@ -224,7 +249,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{cluster=\"$cluster\",grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{namespace}} {{job}}"
                   }
                 }
@@ -240,7 +265,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{cluster=\"$cluster\",grpc_method!=\"RemoteWrite\",grpc_type=\"unary\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{namespace}} {{job}}"
                   }
                 }
@@ -290,7 +315,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, grpc_method, grpc_code) (\n  rate(\n    grpc_server_handled_total{grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (namespace, job, grpc_method, grpc_code) (\n  rate(\n    grpc_server_handled_total{cluster=\"$cluster\",grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}"
                   }
                 }
@@ -340,7 +365,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (namespace, job, grpc_code) (\n    rate(\n      grpc_server_handled_total{grpc_code=~\"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss\",grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/ ignoring (grpc_code) group_left ()\n  sum by (namespace, job) (\n    rate(\n      grpc_server_handled_total{grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (namespace, job, grpc_code) (\n    rate(\n      grpc_server_handled_total{cluster=\"$cluster\",grpc_code=~\"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss\",grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/ ignoring (grpc_code) group_left ()\n  sum by (namespace, job) (\n    rate(\n      grpc_server_handled_total{cluster=\"$cluster\",grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}"
                   }
                 }
@@ -389,7 +414,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{cluster=\"$cluster\",grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{namespace}} {{job}}"
                   }
                 }
@@ -405,7 +430,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{cluster=\"$cluster\",grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{namespace}} {{job}}"
                   }
                 }
@@ -421,7 +446,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      grpc_server_handling_seconds_bucket{cluster=\"$cluster\",grpc_type=\"server_stream\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{namespace}} {{job}}"
                   }
                 }
@@ -471,7 +496,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, operation) (\n  rate(thanos_objstore_bucket_operations_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n)",
+                    "query": "sum by (namespace, job, operation) (\n  rate(\n    thanos_objstore_bucket_operations_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{job}} {{operation}} {{namespace}}"
                   }
                 }
@@ -521,7 +546,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "    sum by (namespace, job, operation) (\n      rate(\n        thanos_objstore_bucket_operation_failures_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n  /\n    sum by (namespace, job, operation) (\n      rate(thanos_objstore_bucket_operations_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n    )\n*\n  100",
+                    "query": "    sum by (namespace, job, operation) (\n      rate(\n        thanos_objstore_bucket_operation_failures_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n  /\n    sum by (namespace, job, operation) (\n      rate(\n        thanos_objstore_bucket_operations_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n*\n  100",
                     "seriesNameFormat": "{{job}} {{operation}} {{namespace}}"
                   }
                 }
@@ -570,7 +595,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, operation, le) (\n    rate(\n      thanos_objstore_bucket_operation_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, operation, le) (\n    rate(\n      thanos_objstore_bucket_operation_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{operation}} {{namespace}}"
                   }
                 }
@@ -586,7 +611,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, operation, le) (\n    rate(\n      thanos_objstore_bucket_operation_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, operation, le) (\n    rate(\n      thanos_objstore_bucket_operation_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{operation}} {{namespace}}"
                   }
                 }
@@ -602,7 +627,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, operation, le) (\n    rate(\n      thanos_objstore_bucket_operation_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, operation, le) (\n    rate(\n      thanos_objstore_bucket_operation_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{operation}} {{namespace}}"
                   }
                 }
@@ -652,7 +677,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job) (\n  rate(thanos_bucket_store_block_loads_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n)",
+                    "query": "sum by (namespace, job) (\n  rate(\n    thanos_bucket_store_block_loads_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{job}} {{namespace}}"
                   }
                 }
@@ -702,7 +727,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "    sum by (namespace, job) (\n      rate(\n        thanos_bucket_store_block_load_failures_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n  /\n    sum by (namespace, job) (\n      rate(thanos_bucket_store_block_loads_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n    )\n*\n  100",
+                    "query": "    sum by (namespace, job) (\n      rate(\n        thanos_bucket_store_block_load_failures_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n  /\n    sum by (namespace, job) (\n      rate(\n        thanos_bucket_store_block_loads_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n*\n  100",
                     "seriesNameFormat": "{{job}} {{namespace}}"
                   }
                 }
@@ -752,7 +777,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, operation) (\n  rate(thanos_bucket_store_block_drops_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n)",
+                    "query": "sum by (namespace, job, operation) (\n  rate(\n    thanos_bucket_store_block_drops_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{job}} {{operation}} {{namespace}}"
                   }
                 }
@@ -802,7 +827,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "    sum by (namespace, job) (\n      rate(\n        thanos_bucket_store_block_drop_failures_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n  /\n    sum by (namespace, job) (\n      rate(thanos_bucket_store_block_drops_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n    )\n*\n  100",
+                    "query": "    sum by (namespace, job) (\n      rate(\n        thanos_bucket_store_block_drop_failures_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n  /\n    sum by (namespace, job) (\n      rate(\n        thanos_bucket_store_block_drops_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n      )\n    )\n*\n  100",
                     "seriesNameFormat": "{{job}} {{namespace}}"
                   }
                 }
@@ -852,7 +877,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, item_type) (\n  rate(thanos_store_index_cache_requests_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n)",
+                    "query": "sum by (namespace, job, item_type) (\n  rate(\n    thanos_store_index_cache_requests_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{job}} {{item_type}} {{namespace}}"
                   }
                 }
@@ -902,7 +927,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, item_type) (\n  rate(thanos_store_index_cache_hits_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])\n)",
+                    "query": "sum by (namespace, job, item_type) (\n  rate(\n    thanos_store_index_cache_hits_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{job}} {{item_type}} {{namespace}}"
                   }
                 }
@@ -952,7 +977,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, item_type) (\n  rate(\n    thanos_store_index_cache_items_added_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (namespace, job, item_type) (\n  rate(\n    thanos_store_index_cache_items_added_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{job}} {{item_type}} {{namespace}}"
                   }
                 }
@@ -1002,7 +1027,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (namespace, job, item_type) (\n  rate(\n    thanos_store_index_cache_items_evicted_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (namespace, job, item_type) (\n  rate(\n    thanos_store_index_cache_items_evicted_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{job}} {{item_type}} {{namespace}}"
                   }
                 }
@@ -1051,7 +1076,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_sum{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_count{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_sum{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_count{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "mean {{job}} {{namespace}}"
                   }
                 }
@@ -1067,7 +1092,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{namespace}}"
                   }
                 }
@@ -1083,7 +1108,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{namespace}}"
                   }
                 }
@@ -1099,7 +1124,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_blocks_queried_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{namespace}}"
                   }
                 }
@@ -1148,7 +1173,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_sum{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_count{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_sum{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_count{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "mean {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1164,7 +1189,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1180,7 +1205,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1196,7 +1221,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_fetched_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1245,7 +1270,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_sum{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_count{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_sum{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job, data_type) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_count{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "mean {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1261,7 +1286,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1277,7 +1302,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1293,7 +1318,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, data_type, le) (\n    rate(\n      thanos_bucket_store_series_data_size_touched_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{data_type}} {{namespace}}"
                   }
                 }
@@ -1342,7 +1367,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_result_series_sum{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_result_series_count{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_result_series_sum{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_series_result_series_count{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "mean {{job}} {{namespace}}"
                   }
                 }
@@ -1358,7 +1383,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_result_series_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_result_series_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{namespace}}"
                   }
                 }
@@ -1374,7 +1399,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_result_series_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_result_series_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{namespace}}"
                   }
                 }
@@ -1390,7 +1415,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_result_series_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_result_series_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{namespace}}"
                   }
                 }
@@ -1439,7 +1464,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_get_all_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_get_all_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{namespace}}"
                   }
                 }
@@ -1455,7 +1480,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_get_all_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_get_all_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{namespace}}"
                   }
                 }
@@ -1471,7 +1496,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_get_all_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_get_all_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{namespace}}"
                   }
                 }
@@ -1520,7 +1545,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_merge_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_merge_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{namespace}}"
                   }
                 }
@@ -1536,7 +1561,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_merge_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_merge_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{namespace}}"
                   }
                 }
@@ -1552,7 +1577,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_merge_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_merge_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{namespace}}"
                   }
                 }
@@ -1601,7 +1626,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_gate_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_gate_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{namespace}}"
                   }
                 }
@@ -1617,7 +1642,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_gate_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_gate_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{namespace}}"
                   }
                 }
@@ -1633,7 +1658,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_gate_duration_seconds_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_series_gate_duration_seconds_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{namespace}}"
                   }
                 }
@@ -1682,7 +1707,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_sum{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_count{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_sum{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (namespace, job) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_count{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "mean {{job}} {{namespace}}"
                   }
                 }
@@ -1698,7 +1723,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.5,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p50 {{job}} {{namespace}}"
                   }
                 }
@@ -1714,7 +1739,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.9,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p90 {{job}} {{namespace}}"
                   }
                 }
@@ -1730,7 +1755,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_bucket{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (namespace, job, le) (\n    rate(\n      thanos_bucket_store_sent_chunk_size_bytes_bucket{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "p99 {{job}} {{namespace}}"
                   }
                 }
@@ -1782,7 +1807,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "rate(process_cpu_seconds_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])",
+                    "query": "rate(\n  process_cpu_seconds_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -1834,7 +1859,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_alloc_bytes{job=~\"$job\",namespace=\"$namespace\"}",
+                    "query": "go_memstats_alloc_bytes{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}",
                     "seriesNameFormat": "Alloc All {{pod}}"
                   }
                 }
@@ -1850,7 +1875,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_heap_alloc_bytes{job=~\"$job\",namespace=\"$namespace\"}",
+                    "query": "go_memstats_heap_alloc_bytes{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}",
                     "seriesNameFormat": "Alloc Heap {{pod}}"
                   }
                 }
@@ -1866,7 +1891,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "rate(go_memstats_alloc_bytes_total{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])",
+                    "query": "rate(\n  go_memstats_alloc_bytes_total{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n)",
                     "seriesNameFormat": "Alloc Rate All {{pod}}"
                   }
                 }
@@ -1882,7 +1907,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "rate(go_memstats_heap_alloc_bytes{job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval])",
+                    "query": "rate(\n  go_memstats_heap_alloc_bytes{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}[$__rate_interval]\n)",
                     "seriesNameFormat": "Alloc Rate Heap {{pod}}"
                   }
                 }
@@ -1898,7 +1923,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_stack_inuse_bytes{job=~\"$job\",namespace=\"$namespace\"}",
+                    "query": "go_memstats_stack_inuse_bytes{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}",
                     "seriesNameFormat": "Inuse Stack {{pod}}"
                   }
                 }
@@ -1914,7 +1939,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_heap_inuse_bytes{job=~\"$job\",namespace=\"$namespace\"}",
+                    "query": "go_memstats_heap_inuse_bytes{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}",
                     "seriesNameFormat": "Inuse Heap {{pod}}"
                   }
                 }
@@ -1930,7 +1955,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "process_resident_memory_bytes{job=~\"$job\",namespace=\"$namespace\"}",
+                    "query": "process_resident_memory_bytes{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}",
                     "seriesNameFormat": "Resident Memory {{pod}}"
                   }
                 }
@@ -1982,7 +2007,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_goroutines{job=~\"$job\",namespace=\"$namespace\"}",
+                    "query": "go_goroutines{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -2034,7 +2059,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_gc_duration_seconds{job=~\"$job\",namespace=\"$namespace\"}",
+                    "query": "go_gc_duration_seconds{cluster=\"$cluster\",job=~\"$job\",namespace=\"$namespace\"}",
                     "seriesNameFormat": "{{quantile}} - {{pod}}"
                   }
                 }

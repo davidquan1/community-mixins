@@ -34,7 +34,7 @@
               },
               "labelName": "cluster",
               "matchers": [
-                "up{job=\"kubelet\"}"
+                "up{job=~\".*kubelet.*\"}"
               ]
             }
           },
@@ -109,7 +109,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n    rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum(\n    rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -159,7 +159,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n    rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum(\n    rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -256,7 +256,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_bytes_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_bytes_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -271,7 +271,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_bytes_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_bytes_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -286,7 +286,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -301,7 +301,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -316,7 +316,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_dropped_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_dropped_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -331,7 +331,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_dropped_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_dropped_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -380,7 +380,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n    rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum by (pod) (\n    rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -430,7 +430,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n    rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum by (pod) (\n    rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -480,7 +480,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n    rate(container_network_receive_packets_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum by (pod) (\n    rate(container_network_receive_packets_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -530,7 +530,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n    rate(\n      container_network_transmit_packets_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval]\n    )\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum by (pod) (\n    rate(\n      container_network_transmit_packets_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval]\n    )\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -580,7 +580,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n    rate(container_network_receive_packets_dropped_total{cluster=\"$cluster\",namespace!=\"\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum by (pod) (\n    rate(container_network_receive_packets_dropped_total{cluster=\"$cluster\",namespace!=\"\"}[$__rate_interval])\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -630,7 +630,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n    rate(\n      container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval]\n    )\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{host_network=\"false\"})\n    )\n)",
+                    "query": "sum by (pod) (\n    rate(\n      container_network_transmit_packets_dropped_total{cluster=\"$cluster\",namespace=~\"$namespace\"}[$__rate_interval]\n    )\n  * on (cluster, namespace, pod) group_left ()\n    topk by (cluster, namespace, pod) (\n      1,\n      max by (cluster, namespace, pod) (kube_pod_info{cluster=\"$cluster\",host_network=\"false\"})\n    )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }

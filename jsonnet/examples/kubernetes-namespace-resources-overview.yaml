@@ -206,7 +206,7 @@ spec:
                     )
                   /
                     sum(
-                      kube_pod_container_resource_requests{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="cpu"}
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="cpu"}
                     )
     "0_1":
       kind: Panel
@@ -237,7 +237,7 @@ spec:
                     )
                   /
                     sum(
-                      kube_pod_container_resource_limits{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="cpu"}
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="cpu"}
                     )
     "0_2":
       kind: Panel
@@ -264,11 +264,11 @@ spec:
                   name: custom-datasource
                 query: |2-
                     sum(
-                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job="cadvisor",namespace="$namespace"}
+                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job=~".*cadvisor.*",namespace="$namespace"}
                     )
                   /
                     sum(
-                      kube_pod_container_resource_requests{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="memory"}
+                      kube_pod_container_resource_requests{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="memory"}
                     )
     "0_3":
       kind: Panel
@@ -295,11 +295,11 @@ spec:
                   name: custom-datasource
                 query: |2-
                     sum(
-                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job="cadvisor",namespace="$namespace"}
+                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job=~".*cadvisor.*",namespace="$namespace"}
                     )
                   /
                     sum(
-                      kube_pod_container_resource_limits{cluster="$cluster",job="kube-state-metrics",namespace="$namespace",resource="memory"}
+                      kube_pod_container_resource_limits{cluster="$cluster",job=~".*kube-state-metrics.*",namespace="$namespace",resource="memory"}
                     )
     "1_0":
       kind: Panel
@@ -515,7 +515,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                    container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job="cadvisor",namespace="$namespace"}
+                    container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job=~".*cadvisor.*",namespace="$namespace"}
                   )
                 seriesNameFormat: '{{pod}}'
         - kind: TimeSeriesQuery
@@ -619,7 +619,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                    container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job="cadvisor",namespace="$namespace"}
+                    container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job=~".*cadvisor.*",namespace="$namespace"}
                   )
         - kind: TimeSeriesQuery
           spec:
@@ -643,7 +643,7 @@ spec:
                   name: custom-datasource
                 query: |2-
                     sum by (pod) (
-                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job="cadvisor",namespace="$namespace"}
+                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job=~".*cadvisor.*",namespace="$namespace"}
                     )
                   /
                     sum by (pod) (
@@ -671,7 +671,7 @@ spec:
                   name: custom-datasource
                 query: |2-
                     sum by (pod) (
-                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job="cadvisor",namespace="$namespace"}
+                      container_memory_working_set_bytes{cluster="$cluster",container!="",image!="",job=~".*cadvisor.*",namespace="$namespace"}
                     )
                   /
                     sum by (pod) (
@@ -687,7 +687,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                    container_memory_rss{cluster="$cluster",container!="",job="cadvisor",namespace="$namespace"}
+                    container_memory_rss{cluster="$cluster",container!="",job=~".*cadvisor.*",namespace="$namespace"}
                   )
         - kind: TimeSeriesQuery
           spec:
@@ -699,7 +699,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                    container_memory_cache{cluster="$cluster",container!="",job="cadvisor",namespace="$namespace"}
+                    container_memory_cache{cluster="$cluster",container!="",job=~".*cadvisor.*",namespace="$namespace"}
                   )
         - kind: TimeSeriesQuery
           spec:
@@ -711,7 +711,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (pod) (
-                    container_memory_swap{cluster="$cluster",container!="",job="cadvisor",namespace="$namespace"}
+                    container_memory_swap{cluster="$cluster",container!="",job=~".*cadvisor.*",namespace="$namespace"}
                   )
     "5_0":
       kind: Panel
@@ -773,7 +773,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_network_receive_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_network_receive_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -787,7 +787,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_network_transmit_bytes_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_network_transmit_bytes_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -801,7 +801,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_network_receive_packets_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_network_receive_packets_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -815,7 +815,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_network_transmit_packets_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_network_transmit_packets_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -829,7 +829,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_network_receive_packets_dropped_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_network_receive_packets_dropped_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -843,7 +843,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_network_transmit_packets_dropped_total{cluster="$cluster",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_network_transmit_packets_dropped_total{cluster="$cluster",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
     "6_0":
@@ -1214,7 +1214,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_fs_reads_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_fs_reads_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -1228,7 +1228,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_fs_writes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_fs_writes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -1242,11 +1242,11 @@ spec:
                 query: |-
                   sum by (pod) (
                       rate(
-                        container_fs_reads_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                        container_fs_reads_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                       )
                     +
                       rate(
-                        container_fs_writes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                        container_fs_writes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                       )
                   )
         - kind: TimeSeriesQuery
@@ -1260,7 +1260,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_fs_reads_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_fs_reads_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -1274,7 +1274,7 @@ spec:
                 query: |-
                   sum by (pod) (
                     rate(
-                      container_fs_writes_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                      container_fs_writes_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                     )
                   )
         - kind: TimeSeriesQuery
@@ -1288,11 +1288,11 @@ spec:
                 query: |-
                   sum by (pod) (
                       rate(
-                        container_fs_reads_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                        container_fs_reads_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                       )
                     +
                       rate(
-                        container_fs_writes_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job="cadvisor",namespace="$namespace"}[$__rate_interval]
+                        container_fs_writes_bytes_total{cluster="$cluster",container!="",device=~"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+",job=~".*cadvisor.*",namespace="$namespace"}[$__rate_interval]
                       )
                   )
   variables:
@@ -1312,7 +1312,7 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - up{job="kubelet"}
+          - up{job=~".*kubelet.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -1329,5 +1329,5 @@ spec:
             name: custom-datasource
           labelName: namespace
           matchers:
-          - kube_namespace_status_phase{cluster="$cluster",job="kube-state-metrics"}
+          - kube_namespace_status_phase{cluster="$cluster",job=~".*kube-state-metrics.*"}
 status: {}

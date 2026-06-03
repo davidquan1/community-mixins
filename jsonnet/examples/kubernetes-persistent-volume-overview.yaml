@@ -86,7 +86,7 @@ spec:
                         topk(
                           1,
                           (
-                            kubelet_volume_stats_capacity_bytes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                            kubelet_volume_stats_capacity_bytes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                           )
                         )
                       )
@@ -95,7 +95,7 @@ spec:
                         topk(
                           1,
                           (
-                            kubelet_volume_stats_available_bytes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                            kubelet_volume_stats_available_bytes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                           )
                         )
                       )
@@ -114,7 +114,7 @@ spec:
                     topk(
                       1,
                       (
-                        kubelet_volume_stats_available_bytes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                        kubelet_volume_stats_available_bytes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                       )
                     )
                   )
@@ -155,18 +155,18 @@ spec:
                         (
                             topk(
                               1,
-                              kubelet_volume_stats_capacity_bytes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                              kubelet_volume_stats_capacity_bytes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                             )
                           -
                             topk(
                               1,
-                              kubelet_volume_stats_available_bytes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                              kubelet_volume_stats_available_bytes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                             )
                         )
                       /
                         topk(
                           1,
-                          kubelet_volume_stats_capacity_bytes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                          kubelet_volume_stats_capacity_bytes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                         )
                     *
                       100
@@ -208,7 +208,7 @@ spec:
                     topk(
                       1,
                       (
-                        kubelet_volume_stats_inodes_used{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                        kubelet_volume_stats_inodes_used{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                       )
                     )
                   )
@@ -227,7 +227,7 @@ spec:
                         topk(
                           1,
                           (
-                            kubelet_volume_stats_inodes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                            kubelet_volume_stats_inodes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                           )
                         )
                       )
@@ -236,7 +236,7 @@ spec:
                         topk(
                           1,
                           (
-                            kubelet_volume_stats_inodes_used{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                            kubelet_volume_stats_inodes_used{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                           )
                         )
                       )
@@ -277,12 +277,12 @@ spec:
                   max without (instance, node) (
                         topk(
                           1,
-                          kubelet_volume_stats_inodes_used{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                          kubelet_volume_stats_inodes_used{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                         )
                       /
                         topk(
                           1,
-                          kubelet_volume_stats_inodes{cluster="$cluster",job="kubelet",namespace="$namespace",persistentvolumeclaim="$volume"}
+                          kubelet_volume_stats_inodes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace",persistentvolumeclaim="$volume"}
                         )
                     *
                       100
@@ -304,7 +304,7 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - kubelet_volume_stats_capacity_bytes{job="kubelet"}
+          - kubelet_volume_stats_capacity_bytes{job=~".*kubelet.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -321,7 +321,7 @@ spec:
             name: custom-datasource
           labelName: namespace
           matchers:
-          - kubelet_volume_stats_capacity_bytes{cluster="$cluster",job="kubelet"}
+          - kubelet_volume_stats_capacity_bytes{cluster="$cluster",job=~".*kubelet.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -338,5 +338,5 @@ spec:
             name: custom-datasource
           labelName: persistentvolumeclaim
           matchers:
-          - kubelet_volume_stats_capacity_bytes{cluster="$cluster",job="kubelet",namespace="$namespace"}
+          - kubelet_volume_stats_capacity_bytes{cluster="$cluster",job=~".*kubelet.*",namespace="$namespace"}
 status: {}

@@ -123,11 +123,11 @@ spec:
                 query: |-
                   max by (limit_name) (
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_overrides{cluster=~"$cluster",job=~"($namespace)/compactor",user="$tenant"}
+                        tempo_limits_overrides{cluster="$cluster",job=~"($namespace)/compactor",user="$tenant"}
                       )
                     or
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_defaults{cluster=~"$cluster",job=~"($namespace)/compactor"}
+                        tempo_limits_defaults{cluster="$cluster",job=~"($namespace)/compactor"}
                       )
                   )
     "1_0":
@@ -164,7 +164,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      tempo_distributor_bytes_received_total{cluster=~"$cluster",job=~"($namespace)/distributor",tenant="$tenant"}[$__rate_interval]
+                      tempo_distributor_bytes_received_total{cluster="$cluster",job=~"($namespace)/distributor",tenant="$tenant"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: received
@@ -179,11 +179,11 @@ spec:
                 query: |-
                   max by (ingestion_rate_limit_bytes) (
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_overrides{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="ingestion_rate_limit_bytes",user="$tenant"}
+                        tempo_limits_overrides{cluster="$cluster",job=~"($namespace)/compactor",limit_name="ingestion_rate_limit_bytes",user="$tenant"}
                       )
                     or
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_defaults{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="ingestion_rate_limit_bytes"}
+                        tempo_limits_defaults{cluster="$cluster",job=~"($namespace)/compactor",limit_name="ingestion_rate_limit_bytes"}
                       )
                   )
                 seriesNameFormat: limit
@@ -198,11 +198,11 @@ spec:
                 query: |-
                   max by (ingestion_burst_size_bytes) (
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_overrides{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="ingestion_burst_size_bytes",user="$tenant"}
+                        tempo_limits_overrides{cluster="$cluster",job=~"($namespace)/compactor",limit_name="ingestion_burst_size_bytes",user="$tenant"}
                       )
                     or
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_defaults{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="ingestion_burst_size_bytes"}
+                        tempo_limits_defaults{cluster="$cluster",job=~"($namespace)/compactor",limit_name="ingestion_burst_size_bytes"}
                       )
                   )
                 seriesNameFormat: burst limit
@@ -239,7 +239,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      tempo_distributor_spans_received_total{cluster=~"$cluster",job=~"($namespace)/distributor",tenant="$tenant"}[$__rate_interval]
+                      tempo_distributor_spans_received_total{cluster="$cluster",job=~"($namespace)/distributor",tenant="$tenant"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: accepted
@@ -254,7 +254,7 @@ spec:
                 query: |-
                   sum by (reason) (
                     rate(
-                      tempo_discarded_spans_total{cluster=~"$cluster",job=~"($namespace)/distributor",tenant="$tenant"}[$__rate_interval]
+                      tempo_discarded_spans_total{cluster="$cluster",job=~"($namespace)/distributor",tenant="$tenant"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: refused {{ reason }}
@@ -288,7 +288,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: max(tempo_ingester_live_traces{cluster=~"$cluster",job=~"($namespace)/ingester",tenant="$tenant"})
+                query: max(tempo_ingester_live_traces{cluster="$cluster",job=~"($namespace)/ingester",tenant="$tenant"})
                 seriesNameFormat: live traces
         - kind: TimeSeriesQuery
           spec:
@@ -301,11 +301,11 @@ spec:
                 query: |-
                   max by (max_global_traces_per_user) (
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_overrides{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="max_global_traces_per_user",user="$tenant"}
+                        tempo_limits_overrides{cluster="$cluster",job=~"($namespace)/compactor",limit_name="max_global_traces_per_user",user="$tenant"}
                       )
                     or
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_defaults{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="max_global_traces_per_user"}
+                        tempo_limits_defaults{cluster="$cluster",job=~"($namespace)/compactor",limit_name="max_global_traces_per_user"}
                       )
                   )
                 seriesNameFormat: global limit
@@ -320,11 +320,11 @@ spec:
                 query: |-
                   max by (max_local_traces_per_user) (
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_overrides{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="max_local_traces_per_user",user="$tenant"}
+                        tempo_limits_overrides{cluster="$cluster",job=~"($namespace)/compactor",limit_name="max_local_traces_per_user",user="$tenant"}
                       )
                     or
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_defaults{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="max_local_traces_per_user"}
+                        tempo_limits_defaults{cluster="$cluster",job=~"($namespace)/compactor",limit_name="max_local_traces_per_user"}
                       )
                   )
                 seriesNameFormat: local limit
@@ -361,7 +361,7 @@ spec:
                 query: |-
                   sum by (status) (
                     rate(
-                      tempo_query_frontend_queries_total{cluster=~"$cluster",job=~"($namespace)/query-frontend",op="traces",tenant="$tenant"}[$__rate_interval]
+                      tempo_query_frontend_queries_total{cluster="$cluster",job=~"($namespace)/query-frontend",op="traces",tenant="$tenant"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{ status }}'
@@ -398,7 +398,7 @@ spec:
                 query: |-
                   sum by (status) (
                     rate(
-                      tempo_query_frontend_queries_total{cluster=~"$cluster",job=~"($namespace)/query-frontend",op="search",tenant="$tenant"}[$__rate_interval]
+                      tempo_query_frontend_queries_total{cluster="$cluster",job=~"($namespace)/query-frontend",op="search",tenant="$tenant"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{ status }}'
@@ -433,7 +433,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: prometheus-datasource
-                query: avg(tempodb_blocklist_length{cluster=~"$cluster",job=~"($namespace)/compactor",tenant="$tenant"})
+                query: avg(tempodb_blocklist_length{cluster="$cluster",job=~"($namespace)/compactor",tenant="$tenant"})
                 seriesNameFormat: length
     "3_1":
       kind: Panel
@@ -468,10 +468,10 @@ spec:
                   name: prometheus-datasource
                 query: |2-
                     sum(
-                      tempodb_compaction_outstanding_blocks{cluster=~"$cluster",job=~"($namespace)/compactor",tenant="$tenant"}
+                      tempodb_compaction_outstanding_blocks{cluster="$cluster",job=~"($namespace)/compactor",tenant="$tenant"}
                     )
                   /
-                    count(tempo_build_info{cluster=~"$cluster",job=~"($namespace)/compactor"})
+                    count(tempo_build_info{cluster="$cluster",job=~"($namespace)/compactor"})
                 seriesNameFormat: blocks
     "4_0":
       kind: Panel
@@ -507,7 +507,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      tempo_metrics_generator_bytes_received_total{cluster=~"$cluster",job=~"($namespace)/metrics-generator",tenant="$tenant"}[$__rate_interval]
+                      tempo_metrics_generator_bytes_received_total{cluster="$cluster",job=~"($namespace)/metrics-generator",tenant="$tenant"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: rate
@@ -544,7 +544,7 @@ spec:
                   name: prometheus-datasource
                 query: |-
                   sum(
-                    tempo_metrics_generator_registry_active_series{cluster=~"$cluster",job=~"($namespace)/metrics-generator",tenant="$tenant"}
+                    tempo_metrics_generator_registry_active_series{cluster="$cluster",job=~"($namespace)/metrics-generator",tenant="$tenant"}
                   )
                 seriesNameFormat: '{{ tenant }}'
         - kind: TimeSeriesQuery
@@ -558,11 +558,11 @@ spec:
                 query: |-
                   max by (metrics_generator_max_active_series) (
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_overrides{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="metrics_generator_max_active_series",user="$tenant"}
+                        tempo_limits_overrides{cluster="$cluster",job=~"($namespace)/compactor",limit_name="metrics_generator_max_active_series",user="$tenant"}
                       )
                     or
                       max by (cluster, namespace, limit_name) (
-                        tempo_limits_defaults{cluster=~"$cluster",job=~"($namespace)/compactor",limit_name="metrics_generator_max_active_series"}
+                        tempo_limits_defaults{cluster="$cluster",job=~"($namespace)/compactor",limit_name="metrics_generator_max_active_series"}
                       )
                   )
                 seriesNameFormat: limit
@@ -571,6 +571,23 @@ spec:
     spec:
       allowAllValue: false
       allowMultiple: true
+      display:
+        hidden: false
+        name: cluster
+      name: cluster
+      plugin:
+        kind: PrometheusLabelValuesVariable
+        spec:
+          datasource:
+            kind: PrometheusDatasource
+            name: prometheus-datasource
+          labelName: cluster
+          matchers:
+          - tempo_build_info{}
+  - kind: ListVariable
+    spec:
+      allowAllValue: false
+      allowMultiple: false
       display:
         hidden: false
         name: cluster

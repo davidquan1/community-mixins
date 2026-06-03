@@ -164,7 +164,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -205,7 +205,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -282,7 +282,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
         - kind: TimeSeriesQuery
@@ -299,7 +299,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
         - kind: TimeSeriesQuery
@@ -316,7 +316,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
         - kind: TimeSeriesQuery
@@ -333,7 +333,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
         - kind: TimeSeriesQuery
@@ -350,7 +350,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
         - kind: TimeSeriesQuery
@@ -367,7 +367,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
         - kind: TimeSeriesQuery
@@ -384,7 +384,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
         - kind: TimeSeriesQuery
@@ -401,7 +401,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
     "2_0":
@@ -441,7 +441,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -482,7 +482,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -523,7 +523,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -564,7 +564,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -605,7 +605,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -646,7 +646,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -687,7 +687,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -728,7 +728,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{namespace}}'
@@ -771,7 +771,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{instance}}'
@@ -814,7 +814,7 @@ spec:
                     * on (cluster, namespace, pod) group_left ()
                       topk by (cluster, namespace, pod) (
                         1,
-                        max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                        max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                       )
                   )
                 seriesNameFormat: '{{instance}}'
@@ -835,5 +835,5 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - up{job="kubelet"}
+          - up{job=~".*kubelet.*"}
 status: {}

@@ -128,7 +128,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   count by (job, instance, version, namespace, pod) (
-                    perses_build_info{instance=~"$instance",job=~"$job"}
+                    perses_build_info{cluster="$cluster",instance=~"$instance",job=~"$job"}
                   )
     "1_0":
       kind: Panel
@@ -163,7 +163,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (handler, code) (
-                    rate(perses_http_request_total{instance=~"$instance",job=~"$job"}[$__rate_interval])
+                    rate(
+                      perses_http_request_total{cluster="$cluster",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                    )
                   )
                 seriesNameFormat: '{{handler}} {{method}} {{code}}'
     "1_1":
@@ -199,11 +201,15 @@ spec:
                   name: custom-datasource
                 query: |2-
                       sum by (handler, code) (
-                        rate(perses_http_request_total{code=~"4..|5..",instance=~"$instance",job=~"$job"}[$__rate_interval])
+                        rate(
+                          perses_http_request_total{cluster="$cluster",code=~"4..|5..",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                        )
                       )
                     / ignoring (code) group_left ()
                       sum by (handler) (
-                        rate(perses_http_request_total{instance=~"$instance",job=~"$job"}[$__rate_interval])
+                        rate(
+                          perses_http_request_total{cluster="$cluster",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                        )
                       )
                   *
                     100
@@ -240,11 +246,15 @@ spec:
                   name: custom-datasource
                 query: |2-
                     sum by (handler, method) (
-                      rate(perses_http_request_duration_second_sum{instance=~"$instance",job=~"$job"}[$__rate_interval])
+                      rate(
+                        perses_http_request_duration_second_sum{cluster="$cluster",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                      )
                     )
                   /
                     sum by (handler, method) (
-                      rate(perses_http_request_duration_second_count{instance=~"$instance",job=~"$job"}[$__rate_interval])
+                      rate(
+                        perses_http_request_duration_second_count{cluster="$cluster",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                      )
                     )
                 seriesNameFormat: '{{handler}} {{method}}'
     "2_0":
@@ -279,7 +289,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_alloc_bytes{instance=~"$instance",job=~"$job"}
+                query: go_memstats_alloc_bytes{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: Alloc All {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -289,7 +299,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_alloc_bytes{instance=~"$instance",job=~"$job"}
+                query: go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: Alloc Heap {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -299,7 +309,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: rate(go_memstats_alloc_bytes_total{instance=~"$instance",job=~"$job"}[$__rate_interval])
+                query: |-
+                  rate(
+                    go_memstats_alloc_bytes_total{cluster="$cluster",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                  )
                 seriesNameFormat: Alloc Rate All {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -309,7 +322,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: rate(go_memstats_heap_alloc_bytes{instance=~"$instance",job=~"$job"}[$__rate_interval])
+                query: |-
+                  rate(
+                    go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                  )
                 seriesNameFormat: Alloc Rate Heap {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -319,7 +335,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_stack_inuse_bytes{instance=~"$instance",job=~"$job"}
+                query: go_memstats_stack_inuse_bytes{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: Inuse Stack {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -329,7 +345,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_inuse_bytes{instance=~"$instance",job=~"$job"}
+                query: go_memstats_heap_inuse_bytes{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: Inuse Heap {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -339,7 +355,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: process_resident_memory_bytes{instance=~"$instance",job=~"$job"}
+                query: process_resident_memory_bytes{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: Resident Memory {{pod}}
     "2_1":
       kind: Panel
@@ -373,7 +389,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: rate(process_cpu_seconds_total{instance=~"$instance",job=~"$job"}[$__rate_interval])
+                query: |-
+                  rate(
+                    process_cpu_seconds_total{cluster="$cluster",instance=~"$instance",job=~"$job"}[$__rate_interval]
+                  )
                 seriesNameFormat: '{{pod}}'
     "2_2":
       kind: Panel
@@ -407,7 +426,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_goroutines{instance=~"$instance",job=~"$job"}
+                query: go_goroutines{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: '{{pod}}'
     "2_3":
       kind: Panel
@@ -441,7 +460,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_gc_duration_seconds{instance=~"$instance",job=~"$job"}
+                query: go_gc_duration_seconds{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: '{{quantile}} - {{pod}}'
     "2_4":
       kind: Panel
@@ -475,7 +494,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: process_open_fds{instance=~"$instance",job=~"$job"}
+                query: process_open_fds{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: '{{instance}} - {{pod}} Open FDs'
         - kind: TimeSeriesQuery
           spec:
@@ -485,7 +504,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: process_max_fds{instance=~"$instance",job=~"$job"}
+                query: process_max_fds{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: '{{instance}} - {{pod}} - Max FDs'
     "3_0":
       kind: Panel
@@ -519,7 +538,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: perses_plugin_schemas_load_attempts{instance=~"$instance",job=~"$job"}
+                query: perses_plugin_schemas_load_attempts{cluster="$cluster",instance=~"$instance",job=~"$job"}
                 seriesNameFormat: '{{pod}} - {{schema}} - {{status}}'
   variables:
   - kind: ListVariable
@@ -555,5 +574,5 @@ spec:
             name: custom-datasource
           labelName: instance
           matchers:
-          - perses_build_info{job="$job"}
+          - perses_build_info{cluster="$cluster",job="$job"}
 status: {}

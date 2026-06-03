@@ -45,6 +45,31 @@
         "kind": "ListVariable",
         "spec": {
           "display": {
+            "name": "cluster",
+            "hidden": false
+          },
+          "allowAllValue": false,
+          "allowMultiple": false,
+          "plugin": {
+            "kind": "PrometheusLabelValuesVariable",
+            "spec": {
+              "datasource": {
+                "kind": "PrometheusDatasource",
+                "name": "prometheus-datasource"
+              },
+              "labelName": "cluster",
+              "matchers": [
+                "tempo_build_info{}"
+              ]
+            }
+          },
+          "name": "cluster"
+        }
+      },
+      {
+        "kind": "ListVariable",
+        "spec": {
+          "display": {
             "name": "namespace",
             "hidden": false
           },
@@ -122,7 +147,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "max by (limit_name) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=~\"$cluster\",job=~\"($namespace)/compactor\"}\n    )\n)"
+                    "query": "max by (limit_name) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=\"$cluster\",job=~\"($namespace)/compactor\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=\"$cluster\",job=~\"($namespace)/compactor\"}\n    )\n)"
                   }
                 }
               }
@@ -170,7 +195,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  rate(\n    tempo_distributor_bytes_received_total{cluster=~\"$cluster\",job=~\"($namespace)/distributor\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum(\n  rate(\n    tempo_distributor_bytes_received_total{cluster=\"$cluster\",job=~\"($namespace)/distributor\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "received"
                   }
                 }
@@ -186,7 +211,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "max by (ingestion_rate_limit_bytes) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_rate_limit_bytes\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_rate_limit_bytes\"}\n    )\n)",
+                    "query": "max by (ingestion_rate_limit_bytes) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_rate_limit_bytes\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_rate_limit_bytes\"}\n    )\n)",
                     "seriesNameFormat": "limit"
                   }
                 }
@@ -202,7 +227,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "max by (ingestion_burst_size_bytes) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_burst_size_bytes\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_burst_size_bytes\"}\n    )\n)",
+                    "query": "max by (ingestion_burst_size_bytes) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_burst_size_bytes\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"ingestion_burst_size_bytes\"}\n    )\n)",
                     "seriesNameFormat": "burst limit"
                   }
                 }
@@ -251,7 +276,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  rate(\n    tempo_distributor_spans_received_total{cluster=~\"$cluster\",job=~\"($namespace)/distributor\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum(\n  rate(\n    tempo_distributor_spans_received_total{cluster=\"$cluster\",job=~\"($namespace)/distributor\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "accepted"
                   }
                 }
@@ -267,7 +292,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (reason) (\n  rate(\n    tempo_discarded_spans_total{cluster=~\"$cluster\",job=~\"($namespace)/distributor\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (reason) (\n  rate(\n    tempo_discarded_spans_total{cluster=\"$cluster\",job=~\"($namespace)/distributor\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "refused {{ reason }}"
                   }
                 }
@@ -316,7 +341,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "max(tempo_ingester_live_traces{cluster=~\"$cluster\",job=~\"($namespace)/ingester\",tenant=\"$tenant\"})",
+                    "query": "max(tempo_ingester_live_traces{cluster=\"$cluster\",job=~\"($namespace)/ingester\",tenant=\"$tenant\"})",
                     "seriesNameFormat": "live traces"
                   }
                 }
@@ -332,7 +357,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "max by (max_global_traces_per_user) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_global_traces_per_user\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_global_traces_per_user\"}\n    )\n)",
+                    "query": "max by (max_global_traces_per_user) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_global_traces_per_user\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_global_traces_per_user\"}\n    )\n)",
                     "seriesNameFormat": "global limit"
                   }
                 }
@@ -348,7 +373,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "max by (max_local_traces_per_user) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_local_traces_per_user\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_local_traces_per_user\"}\n    )\n)",
+                    "query": "max by (max_local_traces_per_user) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_local_traces_per_user\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"max_local_traces_per_user\"}\n    )\n)",
                     "seriesNameFormat": "local limit"
                   }
                 }
@@ -397,7 +422,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (status) (\n  rate(\n    tempo_query_frontend_queries_total{cluster=~\"$cluster\",job=~\"($namespace)/query-frontend\",op=\"traces\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (status) (\n  rate(\n    tempo_query_frontend_queries_total{cluster=\"$cluster\",job=~\"($namespace)/query-frontend\",op=\"traces\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{ status }}"
                   }
                 }
@@ -446,7 +471,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (status) (\n  rate(\n    tempo_query_frontend_queries_total{cluster=~\"$cluster\",job=~\"($namespace)/query-frontend\",op=\"search\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (status) (\n  rate(\n    tempo_query_frontend_queries_total{cluster=\"$cluster\",job=~\"($namespace)/query-frontend\",op=\"search\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{ status }}"
                   }
                 }
@@ -495,7 +520,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "avg(tempodb_blocklist_length{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",tenant=\"$tenant\"})",
+                    "query": "avg(tempodb_blocklist_length{cluster=\"$cluster\",job=~\"($namespace)/compactor\",tenant=\"$tenant\"})",
                     "seriesNameFormat": "length"
                   }
                 }
@@ -544,7 +569,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum(\n    tempodb_compaction_outstanding_blocks{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",tenant=\"$tenant\"}\n  )\n/\n  count(tempo_build_info{cluster=~\"$cluster\",job=~\"($namespace)/compactor\"})",
+                    "query": "  sum(\n    tempodb_compaction_outstanding_blocks{cluster=\"$cluster\",job=~\"($namespace)/compactor\",tenant=\"$tenant\"}\n  )\n/\n  count(tempo_build_info{cluster=\"$cluster\",job=~\"($namespace)/compactor\"})",
                     "seriesNameFormat": "blocks"
                   }
                 }
@@ -593,7 +618,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  rate(\n    tempo_metrics_generator_bytes_received_total{cluster=~\"$cluster\",job=~\"($namespace)/metrics-generator\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum(\n  rate(\n    tempo_metrics_generator_bytes_received_total{cluster=\"$cluster\",job=~\"($namespace)/metrics-generator\",tenant=\"$tenant\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "rate"
                   }
                 }
@@ -642,7 +667,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  tempo_metrics_generator_registry_active_series{cluster=~\"$cluster\",job=~\"($namespace)/metrics-generator\",tenant=\"$tenant\"}\n)",
+                    "query": "sum(\n  tempo_metrics_generator_registry_active_series{cluster=\"$cluster\",job=~\"($namespace)/metrics-generator\",tenant=\"$tenant\"}\n)",
                     "seriesNameFormat": "{{ tenant }}"
                   }
                 }
@@ -658,7 +683,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "max by (metrics_generator_max_active_series) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"metrics_generator_max_active_series\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=~\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"metrics_generator_max_active_series\"}\n    )\n)",
+                    "query": "max by (metrics_generator_max_active_series) (\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_overrides{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"metrics_generator_max_active_series\",user=\"$tenant\"}\n    )\n  or\n    max by (cluster, namespace, limit_name) (\n      tempo_limits_defaults{cluster=\"$cluster\",job=~\"($namespace)/compactor\",limit_name=\"metrics_generator_max_active_series\"}\n    )\n)",
                     "seriesNameFormat": "limit"
                   }
                 }

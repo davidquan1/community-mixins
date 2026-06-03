@@ -20,6 +20,9 @@ import (
 	"github.com/perses/community-mixins/pkg/promql"
 	"github.com/perses/perses/go-sdk/dashboard"
 	panelgroup "github.com/perses/perses/go-sdk/panel-group"
+
+	listVar "github.com/perses/perses/go-sdk/variable/list-variable"
+	labelValuesVar "github.com/perses/plugins/prometheus/sdk/go/variable/label-values"
 	"github.com/prometheus/prometheus/model/labels"
 )
 

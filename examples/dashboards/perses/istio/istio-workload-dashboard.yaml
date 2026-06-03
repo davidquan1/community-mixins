@@ -12,6 +12,23 @@ spec:
         - kind: ListVariable
           spec:
             display:
+                name: cluster
+                hidden: false
+            allowAllValue: false
+            allowMultiple: false
+            plugin:
+                kind: PrometheusLabelValuesVariable
+                spec:
+                    datasource:
+                        kind: PrometheusDatasource
+                        name: prometheus-datasource
+                    labelName: cluster
+                    matchers:
+                        - istio_requests_total{}
+            name: cluster
+        - kind: ListVariable
+          spec:
+            display:
                 name: Namespace
                 hidden: false
             defaultValue: bookinfo
@@ -155,7 +172,7 @@ spec:
                                     round(
                                       sum(
                                         irate(
-                                          istio_requests_total{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[5m]
+                                          istio_requests_total{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[5m]
                                         )
                                       ),
                                       0.001
@@ -195,13 +212,13 @@ spec:
                                 query: |4-
                                       sum(
                                         irate(
-                                          istio_requests_total{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",response_code!~"5.*"}[5m]
+                                          istio_requests_total{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",response_code!~"5.*"}[5m]
                                         )
                                       )
                                     /
                                       sum(
                                         irate(
-                                          istio_requests_total{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[5m]
+                                          istio_requests_total{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[5m]
                                         )
                                       )
         "1_2":
@@ -238,7 +255,7 @@ spec:
                                           0.5,
                                           sum by (le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                             )
                                           )
                                         )
@@ -249,7 +266,7 @@ spec:
                                         0.5,
                                         sum by (le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                           )
                                         )
                                       )
@@ -267,7 +284,7 @@ spec:
                                           0.9,
                                           sum by (le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                             )
                                           )
                                         )
@@ -278,7 +295,7 @@ spec:
                                         0.9,
                                         sum by (le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                           )
                                         )
                                       )
@@ -296,7 +313,7 @@ spec:
                                           0.99,
                                           sum by (le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                             )
                                           )
                                         )
@@ -307,7 +324,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                           )
                                         )
                                       )
@@ -345,13 +362,13 @@ spec:
                                 query: |4-
                                       sum(
                                         irate(
-                                          istio_tcp_sent_bytes_total{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                          istio_tcp_sent_bytes_total{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                         )
                                       )
                                     +
                                       sum(
                                         irate(
-                                          istio_tcp_received_bytes_total{destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep"}[1m]
                                         )
                                       )
         "2_1":
@@ -387,13 +404,13 @@ spec:
                                 query: |4-
                                       sum(
                                         irate(
-                                          istio_tcp_sent_bytes_total{reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_tcp_sent_bytes_total{cluster="$cluster",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     +
                                       sum(
                                         irate(
-                                          istio_tcp_received_bytes_total{reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
         "3_0":
@@ -442,7 +459,7 @@ spec:
                                     round(
                                       sum by (source_workload, source_workload_namespace, response_code) (
                                         irate(
-                                          istio_requests_total{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       ),
                                       0.001
@@ -460,7 +477,7 @@ spec:
                                     round(
                                       sum by (source_workload, source_workload_namespace, response_code) (
                                         irate(
-                                          istio_requests_total{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       ),
                                       0.001
@@ -500,13 +517,13 @@ spec:
                                 query: |4-
                                       sum by (source_workload, source_workload_namespace) (
                                         irate(
-                                          istio_requests_total{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",response_code!~"5.*",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",response_code!~"5.*",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
                                         )
                                       )
                                     /
                                       sum by (source_workload, source_workload_namespace) (
                                         irate(
-                                          istio_requests_total{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
                                         )
                                       )
                                 seriesNameFormat: "{{ source_workload }}.{{ source_workload_namespace }} (\U0001F510mTLS)"
@@ -521,13 +538,13 @@ spec:
                                 query: |4-
                                       sum by (source_workload, source_workload_namespace) (
                                         irate(
-                                          istio_requests_total{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",response_code!~"5.*",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",response_code!~"5.*",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
                                         )
                                       )
                                     /
                                       sum by (source_workload, source_workload_namespace) (
                                         irate(
-                                          istio_requests_total{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[5m]
                                         )
                                       )
                                 seriesNameFormat: '{{ source_workload }}.{{ source_workload_namespace }}'
@@ -566,7 +583,7 @@ spec:
                                           0.5,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -577,7 +594,7 @@ spec:
                                         0.5,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -595,7 +612,7 @@ spec:
                                           0.9,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -606,7 +623,7 @@ spec:
                                         0.9,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -624,7 +641,7 @@ spec:
                                           0.95,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -635,7 +652,7 @@ spec:
                                         0.95,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -653,7 +670,7 @@ spec:
                                           0.99,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -664,7 +681,7 @@ spec:
                                         0.99,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -682,7 +699,7 @@ spec:
                                           0.5,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -693,7 +710,7 @@ spec:
                                         0.5,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -711,7 +728,7 @@ spec:
                                           0.9,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -722,7 +739,7 @@ spec:
                                         0.9,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -740,7 +757,7 @@ spec:
                                           0.95,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -751,7 +768,7 @@ spec:
                                         0.95,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -769,7 +786,7 @@ spec:
                                           0.99,
                                           sum by (source_workload, source_workload_namespace, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                             )
                                           )
                                         )
@@ -780,7 +797,7 @@ spec:
                                         0.99,
                                         sum by (source_workload, source_workload_namespace, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                           )
                                         )
                                       )
@@ -819,7 +836,7 @@ spec:
                                       0.5,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -837,7 +854,7 @@ spec:
                                       0.9,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -855,7 +872,7 @@ spec:
                                       0.95,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -873,7 +890,7 @@ spec:
                                       0.99,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -891,7 +908,7 @@ spec:
                                       0.99,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -909,7 +926,7 @@ spec:
                                       0.5,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -927,7 +944,7 @@ spec:
                                       0.9,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -945,7 +962,7 @@ spec:
                                       0.95,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -963,7 +980,7 @@ spec:
                                       0.99,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1002,7 +1019,7 @@ spec:
                                       0.5,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1020,7 +1037,7 @@ spec:
                                       0.9,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1038,7 +1055,7 @@ spec:
                                       0.95,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1056,7 +1073,7 @@ spec:
                                       0.99,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1074,7 +1091,7 @@ spec:
                                       0.5,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1092,7 +1109,7 @@ spec:
                                       0.9,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1110,7 +1127,7 @@ spec:
                                       0.95,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1128,7 +1145,7 @@ spec:
                                       0.99,
                                       sum by (source_workload, source_workload_namespace, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[1m]
                                         )
                                       )
                                     )
@@ -1166,7 +1183,7 @@ spec:
                                     round(
                                       sum by (source_workload, source_workload_namespace) (
                                         irate(
-                                          istio_tcp_received_bytes_total{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[$__rate_interval]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[$__rate_interval]
                                         )
                                       ),
                                       0.001
@@ -1184,7 +1201,7 @@ spec:
                                     round(
                                       sum by (source_workload, source_workload_namespace) (
                                         irate(
-                                          istio_tcp_received_bytes_total{connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[$__rate_interval]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",connection_security_policy!="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[$__rate_interval]
                                         )
                                       ),
                                       0.001
@@ -1223,7 +1240,7 @@ spec:
                                     round(
                                       sum by (source_workload, source_workload_namespace) (
                                         irate(
-                                          istio_tcp_sent_bytes_total{connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[$__rate_interval]
+                                          istio_tcp_sent_bytes_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_workload=~"$workload",destination_workload_namespace=~"$namespace",reporter=~"$qrep",source_workload=~"$srcwl",source_workload_namespace=~"$srcns"}[$__rate_interval]
                                         )
                                       ),
                                       0.001
@@ -1241,7 +1258,7 @@ spec:
                                     round(
                                       sum by (destination_service, response_code) (
                                         irate(
-                                          istio_requests_total{destination_principal!~"spiffe.*",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
+                                          istio_requests_total{cluster="$cluster",destination_principal!~"spiffe.*",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
                                         )
                                       ),
                                       0.001
@@ -1290,7 +1307,7 @@ spec:
                                     round(
                                       sum by (destination_service, response_code) (
                                         irate(
-                                          istio_requests_total{destination_principal=~"spiffe.*",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
+                                          istio_requests_total{cluster="$cluster",destination_principal=~"spiffe.*",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
                                         )
                                       ),
                                       0.001
@@ -1308,7 +1325,7 @@ spec:
                                     round(
                                       sum by (destination_service, response_code) (
                                         irate(
-                                          istio_requests_total{destination_principal!~"spiffe.*",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
+                                          istio_requests_total{cluster="$cluster",destination_principal!~"spiffe.*",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
                                         )
                                       ),
                                       0.001
@@ -1347,13 +1364,13 @@ spec:
                                 query: |4-
                                       sum by (destination_service) (
                                         irate(
-                                          istio_requests_total{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",response_code!~"5.*",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",response_code!~"5.*",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
                                         )
                                       )
                                     /
                                       sum by (destination_service) (
                                         irate(
-                                          istio_requests_total{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
                                         )
                                       )
                                 seriesNameFormat: "{{ destination_service }} (\U0001F510mTLS)"
@@ -1368,13 +1385,13 @@ spec:
                                 query: |4-
                                       sum by (destination_service) (
                                         irate(
-                                          istio_requests_total{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",response_code!~"5.*",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",response_code!~"5.*",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
                                         )
                                       )
                                     /
                                       sum by (destination_service) (
                                         irate(
-                                          istio_requests_total{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
+                                          istio_requests_total{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[5m]
                                         )
                                       )
                                 seriesNameFormat: '{{ destination_service }}'
@@ -1410,7 +1427,7 @@ spec:
                                           0.5,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1421,7 +1438,7 @@ spec:
                                         0.5,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1439,7 +1456,7 @@ spec:
                                           0.9,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1450,7 +1467,7 @@ spec:
                                         0.9,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1468,7 +1485,7 @@ spec:
                                           0.95,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1479,7 +1496,7 @@ spec:
                                         0.95,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1497,7 +1514,7 @@ spec:
                                           0.99,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1508,7 +1525,7 @@ spec:
                                         0.99,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1526,7 +1543,7 @@ spec:
                                           0.5,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1537,7 +1554,7 @@ spec:
                                         0.5,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1555,7 +1572,7 @@ spec:
                                           0.9,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1566,7 +1583,7 @@ spec:
                                         0.9,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1584,7 +1601,7 @@ spec:
                                           0.95,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1595,7 +1612,7 @@ spec:
                                         0.95,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1613,7 +1630,7 @@ spec:
                                           0.99,
                                           sum by (destination_service, le) (
                                             irate(
-                                              istio_request_duration_milliseconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                              istio_request_duration_milliseconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                             )
                                           )
                                         )
@@ -1624,7 +1641,7 @@ spec:
                                         0.99,
                                         sum by (destination_service, le) (
                                           irate(
-                                            istio_request_duration_seconds_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                            istio_request_duration_seconds_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                           )
                                         )
                                       )
@@ -1661,7 +1678,7 @@ spec:
                                       0.5,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1679,7 +1696,7 @@ spec:
                                       0.9,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1697,7 +1714,7 @@ spec:
                                       0.95,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1715,7 +1732,7 @@ spec:
                                       0.99,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1733,7 +1750,7 @@ spec:
                                       0.5,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1751,7 +1768,7 @@ spec:
                                       0.9,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1769,7 +1786,7 @@ spec:
                                       0.95,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1787,7 +1804,7 @@ spec:
                                       0.99,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_request_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_request_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1824,7 +1841,7 @@ spec:
                                       0.5,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1842,7 +1859,7 @@ spec:
                                       0.9,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1860,7 +1877,7 @@ spec:
                                       0.95,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1878,7 +1895,7 @@ spec:
                                       0.99,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1896,7 +1913,7 @@ spec:
                                       0.5,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1914,7 +1931,7 @@ spec:
                                       0.9,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1932,7 +1949,7 @@ spec:
                                       0.95,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1950,7 +1967,7 @@ spec:
                                       0.99,
                                       sum by (destination_service, le) (
                                         irate(
-                                          istio_response_bytes_bucket{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_response_bytes_bucket{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       )
                                     )
@@ -1989,7 +2006,7 @@ spec:
                                     round(
                                       sum by (destination_service) (
                                         irate(
-                                          istio_tcp_received_bytes_total{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       ),
                                       0.001
@@ -2007,7 +2024,7 @@ spec:
                                     round(
                                       sum by (destination_service) (
                                         irate(
-                                          istio_tcp_received_bytes_total{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[1m]
                                         )
                                       ),
                                       0.001
@@ -2047,7 +2064,7 @@ spec:
                                     round(
                                       sum by (destination_service) (
                                         irate(
-                                          istio_tcp_received_bytes_total{connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[$__rate_interval]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",connection_security_policy="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[$__rate_interval]
                                         )
                                       ),
                                       0.001
@@ -2065,7 +2082,7 @@ spec:
                                     round(
                                       sum by (destination_service) (
                                         irate(
-                                          istio_tcp_received_bytes_total{connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[$__rate_interval]
+                                          istio_tcp_received_bytes_total{cluster="$cluster",connection_security_policy!="mutual_tls",destination_service=~"$dstsvc",reporter="source",source_workload=~"$workload",source_workload_namespace=~"$namespace"}[$__rate_interval]
                                         )
                                       ),
                                       0.001

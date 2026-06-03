@@ -505,7 +505,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_alloc_bytes{cluster=~"$cluster",job=~".*etcd.*"}
+                                query: go_memstats_alloc_bytes{cluster="$cluster",job=~".*etcd.*"}
                                 seriesNameFormat: Alloc All {{instance}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -515,7 +515,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_heap_alloc_bytes{cluster=~"$cluster",job=~".*etcd.*"}
+                                query: go_memstats_heap_alloc_bytes{cluster="$cluster",job=~".*etcd.*"}
                                 seriesNameFormat: Alloc Heap {{instance}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -525,7 +525,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: rate(go_memstats_alloc_bytes_total{cluster=~"$cluster",job=~".*etcd.*"}[$__rate_interval])
+                                query: rate(go_memstats_alloc_bytes_total{cluster="$cluster",job=~".*etcd.*"}[$__rate_interval])
                                 seriesNameFormat: Alloc Rate All {{instance}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -535,7 +535,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: rate(go_memstats_heap_alloc_bytes{cluster=~"$cluster",job=~".*etcd.*"}[$__rate_interval])
+                                query: rate(go_memstats_heap_alloc_bytes{cluster="$cluster",job=~".*etcd.*"}[$__rate_interval])
                                 seriesNameFormat: Alloc Rate Heap {{instance}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -545,7 +545,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_stack_inuse_bytes{cluster=~"$cluster",job=~".*etcd.*"}
+                                query: go_memstats_stack_inuse_bytes{cluster="$cluster",job=~".*etcd.*"}
                                 seriesNameFormat: Inuse Stack {{instance}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -555,7 +555,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_heap_inuse_bytes{cluster=~"$cluster",job=~".*etcd.*"}
+                                query: go_memstats_heap_inuse_bytes{cluster="$cluster",job=~".*etcd.*"}
                                 seriesNameFormat: Inuse Heap {{instance}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -565,7 +565,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: process_resident_memory_bytes{cluster=~"$cluster",job=~".*etcd.*"}
+                                query: process_resident_memory_bytes{cluster="$cluster",job=~".*etcd.*"}
                                 seriesNameFormat: Resident Memory {{instance}}
         "6_1":
             kind: Panel
@@ -599,7 +599,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: rate(process_cpu_seconds_total{cluster=~"$cluster",job=~".*etcd.*"}[$__rate_interval])
+                                query: rate(process_cpu_seconds_total{cluster="$cluster",job=~".*etcd.*"}[$__rate_interval])
                                 seriesNameFormat: '{{instance}}'
         "6_2":
             kind: Panel
@@ -633,7 +633,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_goroutines{cluster=~"$cluster",job=~".*etcd.*"}
+                                query: go_goroutines{cluster="$cluster",job=~".*etcd.*"}
                                 seriesNameFormat: '{{instance}}'
         "6_3":
             kind: Panel
@@ -667,7 +667,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_gc_duration_seconds{cluster=~"$cluster",job=~".*etcd.*"}
+                                query: go_gc_duration_seconds{cluster="$cluster",job=~".*etcd.*"}
                                 seriesNameFormat: '{{quantile}} - {{instance}}'
     layouts:
         - kind: Grid

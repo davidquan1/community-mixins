@@ -246,7 +246,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum by (namespace, job) (thanos_compact_todo_compaction_blocks{job=~"$job",namespace="$namespace"})
+                query: |-
+                  sum by (namespace, job) (
+                    thanos_compact_todo_compaction_blocks{cluster="$cluster",job=~"$job",namespace="$namespace"}
+                  )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "0_1":
       kind: Panel
@@ -279,7 +282,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum by (namespace, job) (thanos_compact_todo_compactions{job=~"$job",namespace="$namespace"})
+                query: |-
+                  sum by (namespace, job) (
+                    thanos_compact_todo_compactions{cluster="$cluster",job=~"$job",namespace="$namespace"}
+                  )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "0_2":
       kind: Panel
@@ -312,7 +318,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum by (namespace, job) (thanos_compact_todo_deletion_blocks{job=~"$job",namespace="$namespace"})
+                query: |-
+                  sum by (namespace, job) (
+                    thanos_compact_todo_deletion_blocks{cluster="$cluster",job=~"$job",namespace="$namespace"}
+                  )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "0_3":
       kind: Panel
@@ -345,7 +354,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum by (namespace, job) (thanos_compact_todo_downsample_blocks{job=~"$job",namespace="$namespace"})
+                query: |-
+                  sum by (namespace, job) (
+                    thanos_compact_todo_downsample_blocks{cluster="$cluster",job=~"$job",namespace="$namespace"}
+                  )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "1_0":
       kind: Panel
@@ -380,7 +392,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (namespace, job, resolution) (
-                    rate(thanos_compact_group_compactions_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                    rate(
+                      thanos_compact_group_compactions_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                    )
                   )
                 seriesNameFormat: 'Resolution: {{resolution}} - {{job}} {{namespace}}'
     "1_1":
@@ -417,12 +431,14 @@ spec:
                 query: |2-
                       sum by (namespace, job) (
                         rate(
-                          thanos_compact_group_compactions_failures_total{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                          thanos_compact_group_compactions_failures_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                         )
                       )
                     /
                       sum by (namespace, job) (
-                        rate(thanos_compact_group_compactions_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                        rate(
+                          thanos_compact_group_compactions_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        )
                       )
                   *
                     100
@@ -460,7 +476,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (namespace, job, resolution) (
-                    rate(thanos_compact_downsample_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                    rate(
+                      thanos_compact_downsample_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                    )
                   )
                 seriesNameFormat: 'Resolution: {{resolution}} - {{job}} {{namespace}}'
     "2_1":
@@ -496,11 +514,15 @@ spec:
                   name: custom-datasource
                 query: |2-
                       sum by (namespace, job) (
-                        rate(thanos_compact_downsample_failed_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                        rate(
+                          thanos_compact_downsample_failed_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        )
                       )
                     /
                       sum by (namespace, job) (
-                        rate(thanos_compact_downsample_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                        rate(
+                          thanos_compact_downsample_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        )
                       )
                   *
                     100
@@ -540,7 +562,7 @@ spec:
                     0.5,
                     sum by (namespace, job, resolution, le) (
                       rate(
-                        thanos_compact_downsample_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_compact_downsample_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -558,7 +580,7 @@ spec:
                     0.9,
                     sum by (namespace, job, resolution, le) (
                       rate(
-                        thanos_compact_downsample_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_compact_downsample_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -576,7 +598,7 @@ spec:
                     0.99,
                     sum by (namespace, job, resolution, le) (
                       rate(
-                        thanos_compact_downsample_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_compact_downsample_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -614,7 +636,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (namespace, job) (
-                    rate(thanos_blocks_meta_syncs_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                    rate(
+                      thanos_blocks_meta_syncs_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                    )
                   )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "3_1":
@@ -650,11 +674,15 @@ spec:
                   name: custom-datasource
                 query: |2-
                       sum by (namespace, job) (
-                        rate(thanos_blocks_meta_sync_failures_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                        rate(
+                          thanos_blocks_meta_sync_failures_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        )
                       )
                     /
                       sum by (namespace, job) (
-                        rate(thanos_blocks_meta_syncs_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                        rate(
+                          thanos_blocks_meta_syncs_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        )
                       )
                   *
                     100
@@ -694,7 +722,7 @@ spec:
                     0.5,
                     sum by (namespace, job, le) (
                       rate(
-                        thanos_blocks_meta_sync_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_blocks_meta_sync_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -712,7 +740,7 @@ spec:
                     0.9,
                     sum by (namespace, job, le) (
                       rate(
-                        thanos_blocks_meta_sync_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_blocks_meta_sync_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -730,7 +758,7 @@ spec:
                     0.99,
                     sum by (namespace, job, le) (
                       rate(
-                        thanos_blocks_meta_sync_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_blocks_meta_sync_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -768,7 +796,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (namespace, job) (
-                    rate(thanos_compact_blocks_cleaned_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                    rate(
+                      thanos_compact_blocks_cleaned_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                    )
                   )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "4_1":
@@ -805,7 +835,7 @@ spec:
                 query: |-
                   sum by (namespace, job) (
                     rate(
-                      thanos_compact_block_cleanup_failures_total{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                      thanos_compact_block_cleanup_failures_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{job}} {{namespace}}'
@@ -843,7 +873,7 @@ spec:
                 query: |-
                   sum by (namespace, job) (
                     rate(
-                      thanos_compact_blocks_marked_total{job=~"$job",marker="deletion-mark.json",namespace="$namespace"}[$__rate_interval]
+                      thanos_compact_blocks_marked_total{cluster="$cluster",job=~"$job",marker="deletion-mark.json",namespace="$namespace"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{job}} {{namespace}}'
@@ -880,7 +910,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (namespace, job, operation) (
-                    rate(thanos_objstore_bucket_operations_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                    rate(
+                      thanos_objstore_bucket_operations_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                    )
                   )
                 seriesNameFormat: '{{job}} {{operation}} {{namespace}}'
     "5_1":
@@ -917,12 +949,14 @@ spec:
                 query: |2-
                       sum by (namespace, job, operation) (
                         rate(
-                          thanos_objstore_bucket_operation_failures_total{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                          thanos_objstore_bucket_operation_failures_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                         )
                       )
                     /
                       sum by (namespace, job, operation) (
-                        rate(thanos_objstore_bucket_operations_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                        rate(
+                          thanos_objstore_bucket_operations_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        )
                       )
                   *
                     100
@@ -962,7 +996,7 @@ spec:
                     0.99,
                     sum by (namespace, job, operation, le) (
                       rate(
-                        thanos_objstore_bucket_operation_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_objstore_bucket_operation_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -980,7 +1014,7 @@ spec:
                     0.9,
                     sum by (namespace, job, operation, le) (
                       rate(
-                        thanos_objstore_bucket_operation_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_objstore_bucket_operation_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -998,7 +1032,7 @@ spec:
                     0.5,
                     sum by (namespace, job, operation, le) (
                       rate(
-                        thanos_objstore_bucket_operation_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_objstore_bucket_operation_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -1034,7 +1068,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum by (namespace, job) (thanos_compact_halted{job=~"$job",namespace="$namespace"})
+                query: |-
+                  sum by (namespace, job) (
+                    thanos_compact_halted{cluster="$cluster",job=~"$job",namespace="$namespace"}
+                  )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "7_0":
       kind: Panel
@@ -1069,7 +1106,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (namespace, job) (
-                    rate(thanos_compact_garbage_collection_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                    rate(
+                      thanos_compact_garbage_collection_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                    )
                   )
                 seriesNameFormat: '{{job}} {{namespace}}'
     "7_1":
@@ -1106,12 +1145,14 @@ spec:
                 query: |2-
                       sum by (namespace, job) (
                         rate(
-                          thanos_compact_garbage_collection_failures_total{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                          thanos_compact_garbage_collection_failures_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                         )
                       )
                     /
                       sum by (namespace, job) (
-                        rate(thanos_compact_garbage_collection_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                        rate(
+                          thanos_compact_garbage_collection_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        )
                       )
                   *
                     100
@@ -1151,7 +1192,7 @@ spec:
                     0.5,
                     sum by (namespace, job, le) (
                       rate(
-                        thanos_compact_garbage_collection_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_compact_garbage_collection_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -1169,7 +1210,7 @@ spec:
                     0.9,
                     sum by (namespace, job, le) (
                       rate(
-                        thanos_compact_garbage_collection_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_compact_garbage_collection_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -1187,7 +1228,7 @@ spec:
                     0.99,
                     sum by (namespace, job, le) (
                       rate(
-                        thanos_compact_garbage_collection_duration_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                        thanos_compact_garbage_collection_duration_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                       )
                     )
                   )
@@ -1224,7 +1265,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: rate(process_cpu_seconds_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                query: |-
+                  rate(
+                    process_cpu_seconds_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                  )
                 seriesNameFormat: '{{pod}}'
     "8_1":
       kind: Panel
@@ -1258,7 +1302,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_alloc_bytes{job=~"$job",namespace="$namespace"}
+                query: go_memstats_alloc_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                 seriesNameFormat: Alloc All {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -1268,7 +1312,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_alloc_bytes{job=~"$job",namespace="$namespace"}
+                query: go_memstats_heap_alloc_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                 seriesNameFormat: Alloc Heap {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -1278,7 +1322,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: rate(go_memstats_alloc_bytes_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                query: |-
+                  rate(
+                    go_memstats_alloc_bytes_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                  )
                 seriesNameFormat: Alloc Rate All {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -1288,7 +1335,10 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: rate(go_memstats_heap_alloc_bytes{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                query: |-
+                  rate(
+                    go_memstats_heap_alloc_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                  )
                 seriesNameFormat: Alloc Rate Heap {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -1298,7 +1348,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_stack_inuse_bytes{job=~"$job",namespace="$namespace"}
+                query: go_memstats_stack_inuse_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                 seriesNameFormat: Inuse Stack {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -1308,7 +1358,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_inuse_bytes{job=~"$job",namespace="$namespace"}
+                query: go_memstats_heap_inuse_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                 seriesNameFormat: Inuse Heap {{pod}}
         - kind: TimeSeriesQuery
           spec:
@@ -1318,7 +1368,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: process_resident_memory_bytes{job=~"$job",namespace="$namespace"}
+                query: process_resident_memory_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                 seriesNameFormat: Resident Memory {{pod}}
     "8_2":
       kind: Panel
@@ -1352,7 +1402,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_goroutines{job=~"$job",namespace="$namespace"}
+                query: go_goroutines{cluster="$cluster",job=~"$job",namespace="$namespace"}
                 seriesNameFormat: '{{pod}}'
     "8_3":
       kind: Panel
@@ -1386,7 +1436,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_gc_duration_seconds{job=~"$job",namespace="$namespace"}
+                query: go_gc_duration_seconds{cluster="$cluster",job=~"$job",namespace="$namespace"}
                 seriesNameFormat: '{{quantile}} - {{pod}}'
   variables:
   - kind: ListVariable
@@ -1406,6 +1456,23 @@ spec:
           labelName: job
           matchers:
           - thanos_build_info{container="thanos-compact"}
+  - kind: ListVariable
+    spec:
+      allowAllValue: false
+      allowMultiple: false
+      display:
+        hidden: false
+        name: cluster
+      name: cluster
+      plugin:
+        kind: PrometheusLabelValuesVariable
+        spec:
+          datasource:
+            kind: PrometheusDatasource
+            name: custom-datasource
+          labelName: cluster
+          matchers:
+          - thanos_build_info{}
   - kind: ListVariable
     spec:
       allowAllValue: false

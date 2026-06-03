@@ -148,7 +148,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -193,7 +193,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -448,7 +448,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -493,7 +493,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -538,7 +538,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -583,7 +583,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -628,7 +628,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -673,7 +673,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -720,7 +720,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -767,7 +767,7 @@ spec:
                         * on (cluster, namespace, pod) group_left ()
                           topk by (cluster, namespace, pod) (
                             1,
-                            max by (cluster, namespace, pod) (kube_pod_info{host_network="false"})
+                            max by (cluster, namespace, pod) (kube_pod_info{cluster="$cluster",host_network="false"})
                           )
                       * on (cluster, namespace, pod) group_left (workload, workload_type)
                         namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster",namespace="$namespace",workload=~".+",workload_type=~"$type"}
@@ -791,7 +791,7 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - up{job="kubelet"}
+          - up{job=~".*kubelet.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false

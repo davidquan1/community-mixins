@@ -133,7 +133,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum(up{cluster="$cluster",job="kube-proxy"})
+                query: sum(up{cluster="$cluster",job=~".*kube-proxy.*"})
     "1_0":
       kind: Panel
       spec:
@@ -168,7 +168,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      kubeproxy_sync_proxy_rules_duration_seconds_count{cluster="$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                      kubeproxy_sync_proxy_rules_duration_seconds_count{cluster="$cluster",instance=~"$instance",job=~".*kube-proxy.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}}'
@@ -207,7 +207,7 @@ spec:
                   histogram_quantile(
                     0.99,
                     rate(
-                      kubeproxy_sync_proxy_rules_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                      kubeproxy_sync_proxy_rules_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kube-proxy.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}}'
@@ -245,7 +245,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      kubeproxy_network_programming_duration_seconds_count{cluster="$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                      kubeproxy_network_programming_duration_seconds_count{cluster="$cluster",instance=~"$instance",job=~".*kube-proxy.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}}'
@@ -285,7 +285,7 @@ spec:
                     0.99,
                     sum by (instance, le) (
                       rate(
-                        kubeproxy_network_programming_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                        kubeproxy_network_programming_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kube-proxy.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -325,7 +325,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"2..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"2..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 2xx
@@ -340,7 +340,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"3..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"3..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 3xx
@@ -355,7 +355,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"4..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"4..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 4xx
@@ -370,7 +370,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"5..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"5..",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 5xx
@@ -410,7 +410,7 @@ spec:
                     0.99,
                     sum by (verb, le) (
                       rate(
-                        rest_client_request_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kube-proxy",verb="POST"}[$__rate_interval]
+                        rest_client_request_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job="kube-proxy",verb="POST"}[$__rate_interval]
                       )
                     )
                   )
@@ -451,7 +451,7 @@ spec:
                     0.99,
                     sum by (verb, le) (
                       rate(
-                        rest_client_request_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kube-proxy",verb="GET"}[$__rate_interval]
+                        rest_client_request_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job="kube-proxy",verb="GET"}[$__rate_interval]
                       )
                     )
                   )
@@ -488,7 +488,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}
+                query: go_memstats_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kube-proxy"}
                 seriesNameFormat: Alloc All {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -498,7 +498,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}
+                query: go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kube-proxy"}
                 seriesNameFormat: Alloc Heap {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -510,7 +510,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    go_memstats_alloc_bytes_total{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                    go_memstats_alloc_bytes_total{cluster="$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
                   )
                 seriesNameFormat: Alloc Rate All {{instance}}
         - kind: TimeSeriesQuery
@@ -523,7 +523,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    go_memstats_heap_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                    go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
                   )
                 seriesNameFormat: Alloc Rate Heap {{instance}}
         - kind: TimeSeriesQuery
@@ -534,7 +534,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_stack_inuse_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}
+                query: go_memstats_stack_inuse_bytes{cluster="$cluster",instance=~"$instance",job="kube-proxy"}
                 seriesNameFormat: Inuse Stack {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -544,7 +544,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_inuse_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}
+                query: go_memstats_heap_inuse_bytes{cluster="$cluster",instance=~"$instance",job="kube-proxy"}
                 seriesNameFormat: Inuse Heap {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -554,7 +554,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: process_resident_memory_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}
+                query: process_resident_memory_bytes{cluster="$cluster",instance=~"$instance",job="kube-proxy"}
                 seriesNameFormat: Resident Memory {{instance}}
     "4_1":
       kind: Panel
@@ -590,7 +590,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    process_cpu_seconds_total{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
+                    process_cpu_seconds_total{cluster="$cluster",instance=~"$instance",job="kube-proxy"}[$__rate_interval]
                   )
                 seriesNameFormat: '{{instance}}'
     "4_2":
@@ -625,7 +625,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_goroutines{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}
+                query: go_goroutines{cluster="$cluster",instance=~"$instance",job="kube-proxy"}
                 seriesNameFormat: '{{instance}}'
     "4_3":
       kind: Panel
@@ -659,7 +659,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_gc_duration_seconds{cluster=~"$cluster",instance=~"$instance",job="kube-proxy"}
+                query: go_gc_duration_seconds{cluster="$cluster",instance=~"$instance",job="kube-proxy"}
                 seriesNameFormat: '{{quantile}} - {{instance}}'
   variables:
   - kind: ListVariable
@@ -678,7 +678,7 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - up{job="kube-proxy"}
+          - up{job=~".*kube-proxy.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -695,5 +695,5 @@ spec:
             name: custom-datasource
           labelName: instance
           matchers:
-          - up{cluster="$cluster",job="kube-proxy"}
+          - up{cluster="$cluster",job=~".*kube-proxy.*"}
 status: {}

@@ -184,7 +184,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: apiserver_request:availability30d{cluster=~"$cluster",verb="all"}
+                query: apiserver_request:availability30d{cluster="$cluster",verb="all"}
     "1_1":
       kind: Panel
       spec:
@@ -216,7 +216,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: 100 * (apiserver_request:availability30d{cluster=~"$cluster",verb="all"} - 0.99)
+                query: 100 * (apiserver_request:availability30d{cluster="$cluster",verb="all"} - 0.99)
                 seriesNameFormat: errorbudget
     "2_0":
       kind: Panel
@@ -241,7 +241,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: apiserver_request:availability30d{cluster=~"$cluster",verb="read"}
+                query: apiserver_request:availability30d{cluster="$cluster",verb="read"}
     "2_1":
       kind: Panel
       spec:
@@ -275,7 +275,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum by (code) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster",verb="read"})
+                query: sum by (code) (code_resource:apiserver_request_total:rate5m{cluster="$cluster",verb="read"})
                 seriesNameFormat: '{{ code }}'
     "2_2":
       kind: Panel
@@ -310,10 +310,10 @@ spec:
                   name: custom-datasource
                 query: |2-
                     sum by (resource) (
-                      code_resource:apiserver_request_total:rate5m{cluster=~"$cluster",code=~"5..",verb="read"}
+                      code_resource:apiserver_request_total:rate5m{cluster="$cluster",code=~"5..",verb="read"}
                     )
                   /
-                    sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster",verb="read"})
+                    sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster="$cluster",verb="read"})
                 seriesNameFormat: '{{ resource }}'
     "2_3":
       kind: Panel
@@ -345,7 +345,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster=~"$cluster",verb="read"}
+                query: cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster="$cluster",verb="read"}
                 seriesNameFormat: '{{ resource }}'
     "3_0":
       kind: Panel
@@ -370,7 +370,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: apiserver_request:availability30d{cluster=~"$cluster",verb="write"}
+                query: apiserver_request:availability30d{cluster="$cluster",verb="write"}
     "3_1":
       kind: Panel
       spec:
@@ -404,7 +404,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum by (code) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster",verb="write"})
+                query: sum by (code) (code_resource:apiserver_request_total:rate5m{cluster="$cluster",verb="write"})
                 seriesNameFormat: '{{ code }}'
     "3_2":
       kind: Panel
@@ -439,10 +439,10 @@ spec:
                   name: custom-datasource
                 query: |2-
                     sum by (resource) (
-                      code_resource:apiserver_request_total:rate5m{cluster=~"$cluster",code=~"5..",verb="write"}
+                      code_resource:apiserver_request_total:rate5m{cluster="$cluster",code=~"5..",verb="write"}
                     )
                   /
-                    sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster",verb="write"})
+                    sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster="$cluster",verb="write"})
                 seriesNameFormat: '{{ resource }}'
     "3_3":
       kind: Panel
@@ -474,7 +474,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster=~"$cluster",verb="write"}
+                query: cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster="$cluster",verb="write"}
                 seriesNameFormat: '{{ resource }}'
     "4_0":
       kind: Panel
@@ -510,7 +510,7 @@ spec:
                 query: |-
                   sum by (instance, name) (
                     rate(
-                      workqueue_adds_total{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
+                      workqueue_adds_total{cluster="$cluster",instance=~"$instance",job=~".*kube-apiserver.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}} {{name}}'
@@ -547,7 +547,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum by (instance, name) (
-                    rate(workqueue_depth{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval])
+                    rate(workqueue_depth{cluster="$cluster",instance=~"$instance",job=~".*kube-apiserver.*"}[$__rate_interval])
                   )
                 seriesNameFormat: '{{instance}} {{name}}'
     "4_2":
@@ -586,7 +586,7 @@ spec:
                     0.99,
                     sum by (instance, name, le) (
                       rate(
-                        workqueue_queue_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
+                        workqueue_queue_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kube-apiserver.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -623,7 +623,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}
+                query: go_memstats_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}
                 seriesNameFormat: Alloc All {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -633,7 +633,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}
+                query: go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}
                 seriesNameFormat: Alloc Heap {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -645,7 +645,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    go_memstats_alloc_bytes_total{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
+                    go_memstats_alloc_bytes_total{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
                   )
                 seriesNameFormat: Alloc Rate All {{instance}}
         - kind: TimeSeriesQuery
@@ -658,7 +658,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    go_memstats_heap_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
+                    go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
                   )
                 seriesNameFormat: Alloc Rate Heap {{instance}}
         - kind: TimeSeriesQuery
@@ -669,7 +669,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_stack_inuse_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}
+                query: go_memstats_stack_inuse_bytes{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}
                 seriesNameFormat: Inuse Stack {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -679,7 +679,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_inuse_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}
+                query: go_memstats_heap_inuse_bytes{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}
                 seriesNameFormat: Inuse Heap {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -689,7 +689,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: process_resident_memory_bytes{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}
+                query: process_resident_memory_bytes{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}
                 seriesNameFormat: Resident Memory {{instance}}
     "5_1":
       kind: Panel
@@ -725,7 +725,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    process_cpu_seconds_total{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
+                    process_cpu_seconds_total{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}[$__rate_interval]
                   )
                 seriesNameFormat: '{{instance}}'
     "5_2":
@@ -760,7 +760,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_goroutines{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}
+                query: go_goroutines{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}
                 seriesNameFormat: '{{instance}}'
     "5_3":
       kind: Panel
@@ -794,7 +794,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_gc_duration_seconds{cluster=~"$cluster",instance=~"$instance",job="kube-apiserver"}
+                query: go_gc_duration_seconds{cluster="$cluster",instance=~"$instance",job="kube-apiserver"}
                 seriesNameFormat: '{{quantile}} - {{instance}}'
   variables:
   - kind: ListVariable
@@ -813,7 +813,7 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - up{job="kube-apiserver"}
+          - up{job=~".*kube-apiserver.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -830,5 +830,5 @@ spec:
             name: custom-datasource
           labelName: instance
           matchers:
-          - up{cluster="$cluster",job="kube-apiserver"}
+          - up{cluster="$cluster",job=~".*kube-apiserver.*"}
 status: {}

@@ -29,6 +29,23 @@ spec:
         - kind: ListVariable
           spec:
             display:
+                name: cluster
+                hidden: false
+            allowAllValue: false
+            allowMultiple: false
+            plugin:
+                kind: PrometheusLabelValuesVariable
+                spec:
+                    datasource:
+                        kind: PrometheusDatasource
+                        name: prometheus-datasource
+                    labelName: cluster
+                    matchers:
+                        - tempo_build_info{}
+            name: cluster
+        - kind: ListVariable
+          spec:
+            display:
                 name: namespace
                 hidden: false
             allowAllValue: false
@@ -80,7 +97,7 @@ spec:
                                       label_replace(
                                         label_replace(
                                           rate(
-                                            tempo_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
+                                            tempo_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
                                           ),
                                           "status",
                                           "${1}xx",
@@ -130,7 +147,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempo_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
+                                            tempo_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -150,7 +167,7 @@ spec:
                                         0.5,
                                         sum by (le) (
                                           rate(
-                                            tempo_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
+                                            tempo_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -168,7 +185,7 @@ spec:
                                 query: |4-
                                         sum(
                                           rate(
-                                            tempo_request_duration_seconds_sum{cluster=~"$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
+                                            tempo_request_duration_seconds_sum{cluster="$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
                                           )
                                         )
                                       *
@@ -176,7 +193,7 @@ spec:
                                     /
                                       sum(
                                         rate(
-                                          tempo_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
+                                          tempo_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/cortex-gw(-internal)?",route=~"(opentelemetry_proto_collector_trace_v1_traceservice_export|otlp_v1_traces)"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{route}} Average'
@@ -215,7 +232,7 @@ spec:
                                     sum by (grpc_status) (
                                       rate(
                                         label_replace(
-                                          {__name__=~"envoy_cluster_grpc_proto_collector_trace_v1_TraceService_[0-9]+",cluster=~"$cluster",job=~"($namespace)/cortex-gw(-internal)?"},
+                                          {__name__=~"envoy_cluster_grpc_proto_collector_trace_v1_TraceService_[0-9]+",cluster="$cluster",job=~"($namespace)/cortex-gw(-internal)?"},
                                           "grpc_status",
                                           "$1",
                                           "__name__",
@@ -286,7 +303,7 @@ spec:
                                     name: prometheus-datasource
                                 query: |-
                                     sum(
-                                      rate(tempo_receiver_accepted_spans{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval])
+                                      rate(tempo_receiver_accepted_spans{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval])
                                     )
                                 seriesNameFormat: accepted
                     - kind: TimeSeriesQuery
@@ -299,7 +316,7 @@ spec:
                                     name: prometheus-datasource
                                 query: |-
                                     sum(
-                                      rate(tempo_receiver_refused_spans{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval])
+                                      rate(tempo_receiver_refused_spans{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval])
                                     )
                                 seriesNameFormat: refused
         "2_1":
@@ -335,7 +352,7 @@ spec:
                                 query: |-
                                     sum by (status) (
                                       rate(
-                                        tempo_distributor_bytes_received_total{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                        tempo_distributor_bytes_received_total{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: received
@@ -375,7 +392,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempo_distributor_push_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                            tempo_distributor_push_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -395,7 +412,7 @@ spec:
                                         0.5,
                                         sum by (le) (
                                           rate(
-                                            tempo_distributor_push_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                            tempo_distributor_push_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -413,7 +430,7 @@ spec:
                                 query: |4-
                                         sum(
                                           rate(
-                                            tempo_distributor_push_duration_seconds_sum{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                            tempo_distributor_push_duration_seconds_sum{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                           )
                                         )
                                       *
@@ -421,7 +438,7 @@ spec:
                                     /
                                       sum(
                                         rate(
-                                          tempo_distributor_push_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                          tempo_distributor_push_duration_seconds_count{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{route}} Average'
@@ -458,7 +475,7 @@ spec:
                                 query: |-
                                     sum(
                                       rate(
-                                        tempo_distributor_kafka_appends_total{cluster=~"$cluster",job=~"($namespace)/distributor",status="success"}[$__rate_interval]
+                                        tempo_distributor_kafka_appends_total{cluster="$cluster",job=~"($namespace)/distributor",status="success"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: appends
@@ -495,7 +512,7 @@ spec:
                                 query: |-
                                     sum(
                                       rate(
-                                        tempo_distributor_kafka_appends_total{cluster=~"$cluster",job=~"($namespace)/distributor",status="fail"}[$__rate_interval]
+                                        tempo_distributor_kafka_appends_total{cluster="$cluster",job=~"($namespace)/distributor",status="fail"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: failed
@@ -532,7 +549,7 @@ spec:
                                 query: |-
                                     sum(
                                       rate(
-                                        tempo_distributor_kafka_write_bytes_total{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                        tempo_distributor_kafka_write_bytes_total{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: writes
@@ -572,7 +589,7 @@ spec:
                                       0.5,
                                       sum by (le) (
                                         rate(
-                                          tempo_distributor_kafka_write_latency_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                          tempo_distributor_kafka_write_latency_seconds_bucket{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -590,7 +607,7 @@ spec:
                                       0.99,
                                       sum by (le) (
                                         rate(
-                                          tempo_distributor_kafka_write_latency_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                          tempo_distributor_kafka_write_latency_seconds_bucket{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -606,13 +623,13 @@ spec:
                                 query: |4-
                                       sum(
                                         rate(
-                                          tempo_distributor_kafka_write_latency_seconds_sum{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                          tempo_distributor_kafka_write_latency_seconds_sum{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                         )
                                       )
                                     /
                                       sum(
                                         rate(
-                                          tempo_distributor_kafka_write_latency_seconds_count{cluster=~"$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
+                                          tempo_distributor_kafka_write_latency_seconds_count{cluster="$cluster",job=~"($namespace)/distributor"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: Average
@@ -652,7 +669,7 @@ spec:
                                       label_replace(
                                         label_replace(
                                           rate(
-                                            tempo_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
+                                            tempo_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
                                           ),
                                           "status",
                                           "${1}xx",
@@ -702,7 +719,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempo_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
+                                            tempo_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -722,7 +739,7 @@ spec:
                                         0.5,
                                         sum by (le) (
                                           rate(
-                                            tempo_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
+                                            tempo_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -740,7 +757,7 @@ spec:
                                 query: |4-
                                         sum(
                                           rate(
-                                            tempo_request_duration_seconds_sum{cluster=~"$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
+                                            tempo_request_duration_seconds_sum{cluster="$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
                                           )
                                         )
                                       *
@@ -748,7 +765,7 @@ spec:
                                     /
                                       sum(
                                         rate(
-                                          tempo_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
+                                          tempo_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/ingester",route=~"/tempopb.Pusher/Push.*"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{route}} Average'
@@ -788,7 +805,7 @@ spec:
                                       label_replace(
                                         label_replace(
                                           rate(
-                                            tempo_memcache_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
                                           ),
                                           "status",
                                           "${1}xx",
@@ -838,7 +855,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempo_memcache_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -858,7 +875,7 @@ spec:
                                         0.5,
                                         sum by (le) (
                                           rate(
-                                            tempo_memcache_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -876,7 +893,7 @@ spec:
                                 query: |4-
                                         sum(
                                           rate(
-                                            tempo_memcache_request_duration_seconds_sum{cluster=~"$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_sum{cluster="$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
                                           )
                                         )
                                       *
@@ -884,7 +901,7 @@ spec:
                                     /
                                       sum(
                                         rate(
-                                          tempo_memcache_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
+                                          tempo_memcache_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/ingester",method="Memcache.Put"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{route}} Average'
@@ -924,7 +941,7 @@ spec:
                                       label_replace(
                                         label_replace(
                                           rate(
-                                            tempodb_backend_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
                                           ),
                                           "status",
                                           "${1}xx",
@@ -974,7 +991,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempodb_backend_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -994,7 +1011,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempodb_backend_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -1012,7 +1029,7 @@ spec:
                                 query: |4-
                                         sum(
                                           rate(
-                                            tempodb_backend_request_duration_seconds_sum{cluster=~"$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_sum{cluster="$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
                                           )
                                         )
                                       *
@@ -1020,7 +1037,7 @@ spec:
                                     /
                                       sum(
                                         rate(
-                                          tempodb_backend_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
+                                          tempodb_backend_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/ingester",operation=~"(PUT|POST)"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{route}} Average'
@@ -1060,7 +1077,7 @@ spec:
                                       label_replace(
                                         label_replace(
                                           rate(
-                                            tempo_memcache_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
                                           ),
                                           "status",
                                           "${1}xx",
@@ -1110,7 +1127,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempo_memcache_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -1130,7 +1147,7 @@ spec:
                                         0.5,
                                         sum by (le) (
                                           rate(
-                                            tempo_memcache_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -1148,7 +1165,7 @@ spec:
                                 query: |4-
                                         sum(
                                           rate(
-                                            tempo_memcache_request_duration_seconds_sum{cluster=~"$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
+                                            tempo_memcache_request_duration_seconds_sum{cluster="$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
                                           )
                                         )
                                       *
@@ -1156,7 +1173,7 @@ spec:
                                     /
                                       sum(
                                         rate(
-                                          tempo_memcache_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
+                                          tempo_memcache_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/compactor",method="Memcache.Put"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{route}} Average'
@@ -1196,7 +1213,7 @@ spec:
                                       label_replace(
                                         label_replace(
                                           rate(
-                                            tempodb_backend_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
                                           ),
                                           "status",
                                           "${1}xx",
@@ -1246,7 +1263,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempodb_backend_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -1266,7 +1283,7 @@ spec:
                                         0.99,
                                         sum by (le) (
                                           rate(
-                                            tempodb_backend_request_duration_seconds_bucket{cluster=~"$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_bucket{cluster="$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
                                           )
                                         )
                                       )
@@ -1284,7 +1301,7 @@ spec:
                                 query: |4-
                                         sum(
                                           rate(
-                                            tempodb_backend_request_duration_seconds_sum{cluster=~"$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
+                                            tempodb_backend_request_duration_seconds_sum{cluster="$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
                                           )
                                         )
                                       *
@@ -1292,7 +1309,7 @@ spec:
                                     /
                                       sum(
                                         rate(
-                                          tempodb_backend_request_duration_seconds_count{cluster=~"$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
+                                          tempodb_backend_request_duration_seconds_count{cluster="$cluster",job=~"($namespace)/compactor",operation=~"(PUT|POST)"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{route}} Average'

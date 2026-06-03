@@ -245,7 +245,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum(kubelet_node_name{cluster=~"$cluster",job="kubelet"})
+                query: sum(kubelet_node_name{cluster="$cluster",job=~".*kubelet.*"})
     "0_1":
       kind: Panel
       spec:
@@ -267,7 +267,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum(kubelet_running_pods{cluster=~"$cluster",instance=~"$instance",job="kubelet"})
+                query: sum(kubelet_running_pods{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"})
     "0_2":
       kind: Panel
       spec:
@@ -289,7 +289,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: sum(kubelet_running_containers{cluster=~"$cluster",instance=~"$instance",job="kubelet"})
+                query: sum(kubelet_running_containers{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"})
     "0_3":
       kind: Panel
       spec:
@@ -313,7 +313,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum(
-                    volume_manager_total_volumes{cluster=~"$cluster",instance=~"$instance",job="kubelet",state="actual_state_of_world"}
+                    volume_manager_total_volumes{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*",state="actual_state_of_world"}
                   )
     "0_4":
       kind: Panel
@@ -338,7 +338,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum(
-                    volume_manager_total_volumes{cluster=~"$cluster",instance=~"$instance",job="kubelet",state="desired_state_of_world"}
+                    volume_manager_total_volumes{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*",state="desired_state_of_world"}
                   )
     "0_5":
       kind: Panel
@@ -363,7 +363,9 @@ spec:
                   name: custom-datasource
                 query: |-
                   sum(
-                    rate(kubelet_node_config_error{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval])
+                    rate(
+                      kubelet_node_config_error{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
+                    )
                   )
     "1_0":
       kind: Panel
@@ -401,7 +403,7 @@ spec:
                 query: |-
                   sum by (operation_type, instance) (
                     rate(
-                      kubelet_runtime_operations_total{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      kubelet_runtime_operations_total{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}} {{operation_type}}'
@@ -441,7 +443,7 @@ spec:
                 query: |-
                   sum by (instance, operation_type) (
                     rate(
-                      kubelet_runtime_operations_errors_total{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      kubelet_runtime_operations_errors_total{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}} {{operation_type}}'
@@ -482,7 +484,7 @@ spec:
                     0.99,
                     sum by (instance, operation_type, le) (
                       rate(
-                        kubelet_runtime_operations_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        kubelet_runtime_operations_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -522,7 +524,7 @@ spec:
                 query: |-
                   sum by (instance) (
                     rate(
-                      kubelet_pod_start_duration_seconds_count{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      kubelet_pod_start_duration_seconds_count{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}} pod'
@@ -537,7 +539,7 @@ spec:
                 query: |-
                   sum by (instance) (
                     rate(
-                      kubelet_pod_worker_duration_seconds_count{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      kubelet_pod_worker_duration_seconds_count{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}} worker'
@@ -578,7 +580,7 @@ spec:
                     0.99,
                     sum by (instance, le) (
                       rate(
-                        kubelet_pod_start_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        kubelet_pod_start_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -596,7 +598,7 @@ spec:
                     0.99,
                     sum by (instance, le) (
                       rate(
-                        kubelet_pod_worker_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        kubelet_pod_worker_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -637,7 +639,7 @@ spec:
                 query: |-
                   sum by (instance, operation_name, volume_plugin) (
                     rate(
-                      storage_operation_duration_seconds_count{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      storage_operation_duration_seconds_count{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}} {{operation_name}} {{volume_plugin}}'
@@ -677,7 +679,7 @@ spec:
                 query: |-
                   sum by (instance, operation_name, volume_plugin) (
                     rate(
-                      storage_operation_errors_total{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      storage_operation_errors_total{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}} {{operation_name}} {{volume_plugin}}'
@@ -718,7 +720,7 @@ spec:
                     0.99,
                     sum by (instance, operation_name, volume_plugin, le) (
                       rate(
-                        storage_operation_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        storage_operation_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -758,7 +760,7 @@ spec:
                 query: |-
                   sum by (instance, operation_type) (
                     rate(
-                      kubelet_cgroup_manager_duration_seconds_count{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      kubelet_cgroup_manager_duration_seconds_count{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{operation_type}}'
@@ -799,7 +801,7 @@ spec:
                     0.99,
                     sum by (instance, operation_type, le) (
                       rate(
-                        kubelet_cgroup_manager_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        kubelet_cgroup_manager_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -839,7 +841,7 @@ spec:
                 query: |-
                   sum by (instance) (
                     rate(
-                      kubelet_pleg_relist_duration_seconds_count{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      kubelet_pleg_relist_duration_seconds_count{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: '{{instance}}'
@@ -880,7 +882,7 @@ spec:
                     0.99,
                     sum by (instance, le) (
                       rate(
-                        kubelet_pleg_relist_interval_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        kubelet_pleg_relist_interval_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -922,7 +924,7 @@ spec:
                     0.99,
                     sum by (instance, le) (
                       rate(
-                        kubelet_pleg_relist_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        kubelet_pleg_relist_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -963,7 +965,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"2..",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"2..",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 2xx
@@ -978,7 +980,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"3..",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"3..",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 3xx
@@ -993,7 +995,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"4..",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"4..",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 4xx
@@ -1008,7 +1010,7 @@ spec:
                 query: |-
                   sum(
                     rate(
-                      rest_client_requests_total{cluster=~"$cluster",code=~"5..",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                      rest_client_requests_total{cluster="$cluster",code=~"5..",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                     )
                   )
                 seriesNameFormat: 5xx
@@ -1049,7 +1051,7 @@ spec:
                     0.99,
                     sum by (instance, verb, le) (
                       rate(
-                        rest_client_request_duration_seconds_bucket{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                        rest_client_request_duration_seconds_bucket{cluster="$cluster",instance=~"$instance",job=~".*kubelet.*"}[$__rate_interval]
                       )
                     )
                   )
@@ -1086,7 +1088,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kubelet"}
+                query: go_memstats_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kubelet"}
                 seriesNameFormat: Alloc All {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -1096,7 +1098,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kubelet"}
+                query: go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kubelet"}
                 seriesNameFormat: Alloc Heap {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -1108,7 +1110,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    go_memstats_alloc_bytes_total{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                    go_memstats_alloc_bytes_total{cluster="$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
                   )
                 seriesNameFormat: Alloc Rate All {{instance}}
         - kind: TimeSeriesQuery
@@ -1121,7 +1123,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    go_memstats_heap_alloc_bytes{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                    go_memstats_heap_alloc_bytes{cluster="$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
                   )
                 seriesNameFormat: Alloc Rate Heap {{instance}}
         - kind: TimeSeriesQuery
@@ -1132,7 +1134,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_stack_inuse_bytes{cluster=~"$cluster",instance=~"$instance",job="kubelet"}
+                query: go_memstats_stack_inuse_bytes{cluster="$cluster",instance=~"$instance",job="kubelet"}
                 seriesNameFormat: Inuse Stack {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -1142,7 +1144,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_memstats_heap_inuse_bytes{cluster=~"$cluster",instance=~"$instance",job="kubelet"}
+                query: go_memstats_heap_inuse_bytes{cluster="$cluster",instance=~"$instance",job="kubelet"}
                 seriesNameFormat: Inuse Heap {{instance}}
         - kind: TimeSeriesQuery
           spec:
@@ -1152,7 +1154,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: process_resident_memory_bytes{cluster=~"$cluster",instance=~"$instance",job="kubelet"}
+                query: process_resident_memory_bytes{cluster="$cluster",instance=~"$instance",job="kubelet"}
                 seriesNameFormat: Resident Memory {{instance}}
     "11_1":
       kind: Panel
@@ -1188,7 +1190,7 @@ spec:
                   name: custom-datasource
                 query: |-
                   rate(
-                    process_cpu_seconds_total{cluster=~"$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
+                    process_cpu_seconds_total{cluster="$cluster",instance=~"$instance",job="kubelet"}[$__rate_interval]
                   )
                 seriesNameFormat: '{{instance}}'
     "11_2":
@@ -1223,7 +1225,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_goroutines{cluster=~"$cluster",instance=~"$instance",job="kubelet"}
+                query: go_goroutines{cluster="$cluster",instance=~"$instance",job="kubelet"}
                 seriesNameFormat: '{{instance}}'
     "11_3":
       kind: Panel
@@ -1257,7 +1259,7 @@ spec:
                 datasource:
                   kind: PrometheusDatasource
                   name: custom-datasource
-                query: go_gc_duration_seconds{cluster=~"$cluster",instance=~"$instance",job="kubelet"}
+                query: go_gc_duration_seconds{cluster="$cluster",instance=~"$instance",job="kubelet"}
                 seriesNameFormat: '{{quantile}} - {{instance}}'
   variables:
   - kind: ListVariable
@@ -1276,7 +1278,7 @@ spec:
             name: custom-datasource
           labelName: cluster
           matchers:
-          - up{job="kubelet"}
+          - up{job=~".*kubelet.*"}
   - kind: ListVariable
     spec:
       allowAllValue: false
@@ -1293,5 +1295,5 @@ spec:
             name: custom-datasource
           labelName: instance
           matchers:
-          - up{cluster="$cluster",job="kubelet"}
+          - up{cluster="$cluster",job=~".*kubelet.*"}
 status: {}

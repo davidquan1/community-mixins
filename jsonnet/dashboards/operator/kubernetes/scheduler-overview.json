@@ -34,7 +34,7 @@
               },
               "labelName": "cluster",
               "matchers": [
-                "up{job=\"kube-scheduler\"}"
+                "up{job=~\".*kube-scheduler.*\"}"
               ]
             }
           },
@@ -59,7 +59,7 @@
               },
               "labelName": "instance",
               "matchers": [
-                "up{cluster=\"$cluster\",job=\"kube-scheduler\"}"
+                "up{cluster=\"$cluster\",job=~\".*kube-scheduler.*\"}"
               ]
             }
           },
@@ -96,7 +96,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(up{cluster=\"$cluster\",job=\"kube-scheduler\"})"
+                    "query": "sum(up{cluster=\"$cluster\",job=~\".*kube-scheduler.*\"})"
                   }
                 }
               }
@@ -145,7 +145,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_e2e_scheduling_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_e2e_scheduling_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} e2e"
                   }
                 }
@@ -161,7 +161,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_binding_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_binding_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} binding"
                   }
                 }
@@ -177,7 +177,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_scheduling_algorithm_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_scheduling_algorithm_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} scheduling algorithm"
                   }
                 }
@@ -193,7 +193,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_volume_scheduling_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (cluster, instance) (\n  rate(\n    scheduler_volume_scheduling_duration_seconds_count{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} volume"
                   }
                 }
@@ -243,7 +243,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_e2e_scheduling_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_e2e_scheduling_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} e2e"
                   }
                 }
@@ -259,7 +259,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_binding_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_binding_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} binding"
                   }
                 }
@@ -275,7 +275,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_scheduling_algorithm_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_scheduling_algorithm_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} scheduling algorithm"
                   }
                 }
@@ -291,7 +291,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_volume_scheduling_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (cluster, instance, le) (\n    rate(\n      scheduler_volume_scheduling_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=~\".*kube-scheduler.*\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{cluster}} {{instance}} volume"
                   }
                 }
@@ -342,7 +342,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=~\"$cluster\",code=~\"2..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=\"$cluster\",code=~\"2..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "2xx"
                   }
                 }
@@ -358,7 +358,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=~\"$cluster\",code=~\"3..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=\"$cluster\",code=~\"3..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "3xx"
                   }
                 }
@@ -374,7 +374,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=~\"$cluster\",code=~\"4..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=\"$cluster\",code=~\"4..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "4xx"
                   }
                 }
@@ -390,7 +390,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=~\"$cluster\",code=~\"5..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum(\n  rate(\n    rest_client_requests_total{cluster=\"$cluster\",code=~\"5..\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "5xx"
                   }
                 }
@@ -440,7 +440,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (verb, le) (\n    rate(\n      rest_client_request_duration_seconds_bucket{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\",verb=\"POST\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (verb, le) (\n    rate(\n      rest_client_request_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\",verb=\"POST\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{verb}}"
                   }
                 }
@@ -490,7 +490,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "histogram_quantile(\n  0.99,\n  sum by (verb, le) (\n    rate(\n      rest_client_request_duration_seconds_bucket{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\",verb=\"GET\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "histogram_quantile(\n  0.99,\n  sum by (verb, le) (\n    rate(\n      rest_client_request_duration_seconds_bucket{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\",verb=\"GET\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "{{verb}}"
                   }
                 }
@@ -542,7 +542,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_alloc_bytes{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
+                    "query": "go_memstats_alloc_bytes{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
                     "seriesNameFormat": "Alloc All {{instance}}"
                   }
                 }
@@ -558,7 +558,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_heap_alloc_bytes{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
+                    "query": "go_memstats_heap_alloc_bytes{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
                     "seriesNameFormat": "Alloc Heap {{instance}}"
                   }
                 }
@@ -574,7 +574,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "rate(\n  go_memstats_alloc_bytes_total{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n)",
+                    "query": "rate(\n  go_memstats_alloc_bytes_total{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n)",
                     "seriesNameFormat": "Alloc Rate All {{instance}}"
                   }
                 }
@@ -590,7 +590,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "rate(\n  go_memstats_heap_alloc_bytes{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n)",
+                    "query": "rate(\n  go_memstats_heap_alloc_bytes{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n)",
                     "seriesNameFormat": "Alloc Rate Heap {{instance}}"
                   }
                 }
@@ -606,7 +606,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_stack_inuse_bytes{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
+                    "query": "go_memstats_stack_inuse_bytes{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
                     "seriesNameFormat": "Inuse Stack {{instance}}"
                   }
                 }
@@ -622,7 +622,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_memstats_heap_inuse_bytes{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
+                    "query": "go_memstats_heap_inuse_bytes{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
                     "seriesNameFormat": "Inuse Heap {{instance}}"
                   }
                 }
@@ -638,7 +638,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "process_resident_memory_bytes{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
+                    "query": "process_resident_memory_bytes{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
                     "seriesNameFormat": "Resident Memory {{instance}}"
                   }
                 }
@@ -690,7 +690,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "rate(\n  process_cpu_seconds_total{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n)",
+                    "query": "rate(\n  process_cpu_seconds_total{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}[$__rate_interval]\n)",
                     "seriesNameFormat": "{{instance}}"
                   }
                 }
@@ -742,7 +742,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_goroutines{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
+                    "query": "go_goroutines{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
                     "seriesNameFormat": "{{instance}}"
                   }
                 }
@@ -794,7 +794,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "go_gc_duration_seconds{cluster=~\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
+                    "query": "go_gc_duration_seconds{cluster=\"$cluster\",instance=~\"$instance\",job=\"kube-scheduler\"}",
                     "seriesNameFormat": "{{quantile}} - {{instance}}"
                   }
                 }

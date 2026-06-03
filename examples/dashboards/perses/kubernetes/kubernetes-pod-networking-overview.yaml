@@ -24,7 +24,7 @@ spec:
                         name: prometheus-datasource
                     labelName: cluster
                     matchers:
-                        - up{job="kubelet"}
+                        - up{job=~".*kubelet.*"}
             name: cluster
         - kind: ListVariable
           spec:

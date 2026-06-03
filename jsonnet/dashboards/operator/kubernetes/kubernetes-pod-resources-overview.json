@@ -34,7 +34,7 @@
               },
               "labelName": "cluster",
               "matchers": [
-                "up{job=\"kubelet\"}"
+                "up{job=~\".*kubelet.*\"}"
               ]
             }
           },
@@ -59,7 +59,7 @@
               },
               "labelName": "namespace",
               "matchers": [
-                "kube_namespace_status_phase{cluster=\"$cluster\",job=\"kube-state-metrics\"}"
+                "kube_namespace_status_phase{cluster=\"$cluster\",job=~\".*kube-state-metrics.*\"}"
               ]
             }
           },
@@ -84,7 +84,7 @@
               },
               "labelName": "pod",
               "matchers": [
-                "kube_pod_info{cluster=\"$cluster\",job=\"kube-state-metrics\",namespace=\"$namespace\"}"
+                "kube_pod_info{cluster=\"$cluster\",job=~\".*kube-state-metrics.*\",namespace=\"$namespace\"}"
               ]
             }
           },
@@ -150,7 +150,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  kube_pod_container_resource_requests{cluster=\"$cluster\",job=\"kube-state-metrics\",namespace=\"$namespace\",pod=\"$pod\",resource=\"cpu\"}\n)",
+                    "query": "sum(\n  kube_pod_container_resource_requests{cluster=\"$cluster\",job=~\".*kube-state-metrics.*\",namespace=\"$namespace\",pod=\"$pod\",resource=\"cpu\"}\n)",
                     "seriesNameFormat": "requests"
                   }
                 }
@@ -166,7 +166,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  kube_pod_container_resource_limits{cluster=\"$cluster\",job=\"kube-state-metrics\",namespace=\"$namespace\",pod=\"$pod\",resource=\"cpu\"}\n)",
+                    "query": "sum(\n  kube_pod_container_resource_limits{cluster=\"$cluster\",job=~\".*kube-state-metrics.*\",namespace=\"$namespace\",pod=\"$pod\",resource=\"cpu\"}\n)",
                     "seriesNameFormat": "limits"
                   }
                 }
@@ -263,7 +263,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  rate(\n    container_fs_reads_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (container) (\n  rate(\n    container_fs_reads_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -278,7 +278,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  rate(\n    container_fs_writes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (container) (\n  rate(\n    container_fs_writes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -293,7 +293,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n    rate(\n      container_fs_reads_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  +\n    rate(\n      container_fs_writes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n)"
+                    "query": "sum by (container) (\n    rate(\n      container_fs_reads_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  +\n    rate(\n      container_fs_writes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n)"
                   }
                 }
               }
@@ -308,7 +308,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  rate(\n    container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (container) (\n  rate(\n    container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -323,7 +323,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  rate(\n    container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
+                    "query": "sum by (container) (\n  rate(\n    container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n  )\n)"
                   }
                 }
               }
@@ -338,7 +338,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n    rate(\n      container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  +\n    rate(\n      container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n)"
+                    "query": "sum by (container) (\n    rate(\n      container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  +\n    rate(\n      container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n)"
                   }
                 }
               }
@@ -387,7 +387,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (container) (\n    increase(\n      container_cpu_cfs_throttled_periods_total{cluster=\"$cluster\",container!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (container) (\n    increase(\n      container_cpu_cfs_periods_total{cluster=\"$cluster\",container!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  )",
+                    "query": "  sum by (container) (\n    increase(\n      container_cpu_cfs_throttled_periods_total{cluster=\"$cluster\",container!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  )\n/\n  sum by (container) (\n    increase(\n      container_cpu_cfs_periods_total{cluster=\"$cluster\",container!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  )",
                     "seriesNameFormat": "{{container}}"
                   }
                 }
@@ -590,7 +590,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  container_memory_working_set_bytes{cluster=\"$cluster\",container!=\"\",image!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}\n)",
+                    "query": "sum by (container) (\n  container_memory_working_set_bytes{cluster=\"$cluster\",container!=\"\",image!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}\n)",
                     "seriesNameFormat": "{{container}}"
                   }
                 }
@@ -606,7 +606,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  kube_pod_container_resource_requests{cluster=\"$cluster\",job=\"kube-state-metrics\",namespace=\"$namespace\",pod=\"$pod\",resource=\"memory\"}\n)",
+                    "query": "sum(\n  kube_pod_container_resource_requests{cluster=\"$cluster\",job=~\".*kube-state-metrics.*\",namespace=\"$namespace\",pod=\"$pod\",resource=\"memory\"}\n)",
                     "seriesNameFormat": "requests"
                   }
                 }
@@ -622,7 +622,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum(\n  kube_pod_container_resource_limits{cluster=\"$cluster\",job=\"kube-state-metrics\",namespace=\"$namespace\",pod=\"$pod\",resource=\"memory\"}\n)",
+                    "query": "sum(\n  kube_pod_container_resource_limits{cluster=\"$cluster\",job=~\".*kube-state-metrics.*\",namespace=\"$namespace\",pod=\"$pod\",resource=\"memory\"}\n)",
                     "seriesNameFormat": "limits"
                   }
                 }
@@ -737,7 +737,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  container_memory_working_set_bytes{cluster=\"$cluster\",container!=\"\",image!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
+                    "query": "sum by (container) (\n  container_memory_working_set_bytes{cluster=\"$cluster\",container!=\"\",image!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
                   }
                 }
               }
@@ -767,7 +767,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (container) (\n    container_memory_working_set_bytes{cluster=\"$cluster\",image!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}\n  )\n/\n  sum by (container) (\n    cluster:namespace:pod_memory:active:kube_pod_container_resource_requests{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\"}\n  )"
+                    "query": "  sum by (container) (\n    container_memory_working_set_bytes{cluster=\"$cluster\",image!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}\n  )\n/\n  sum by (container) (\n    cluster:namespace:pod_memory:active:kube_pod_container_resource_requests{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\"}\n  )"
                   }
                 }
               }
@@ -797,7 +797,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "  sum by (container) (\n    container_memory_working_set_bytes{cluster=\"$cluster\",container!=\"\",image!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}\n  )\n/\n  sum by (container) (\n    cluster:namespace:pod_memory:active:kube_pod_container_resource_limits{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\"}\n  )"
+                    "query": "  sum by (container) (\n    container_memory_working_set_bytes{cluster=\"$cluster\",container!=\"\",image!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}\n  )\n/\n  sum by (container) (\n    cluster:namespace:pod_memory:active:kube_pod_container_resource_limits{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\"}\n  )"
                   }
                 }
               }
@@ -812,7 +812,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  container_memory_rss{cluster=\"$cluster\",container!=\"\",container!=\"POD\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
+                    "query": "sum by (container) (\n  container_memory_rss{cluster=\"$cluster\",container!=\"\",container!=\"POD\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
                   }
                 }
               }
@@ -827,7 +827,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  container_memory_cache{cluster=\"$cluster\",container!=\"\",container!=\"POD\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
+                    "query": "sum by (container) (\n  container_memory_cache{cluster=\"$cluster\",container!=\"\",container!=\"POD\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
                   }
                 }
               }
@@ -842,7 +842,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n  container_memory_swap{cluster=\"$cluster\",container!=\"\",container!=\"POD\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
+                    "query": "sum by (container) (\n  container_memory_swap{cluster=\"$cluster\",container!=\"\",container!=\"POD\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}\n)"
                   }
                 }
               }
@@ -891,7 +891,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  irate(\n    container_network_receive_bytes_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  irate(\n    container_network_receive_bytes_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -941,7 +941,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_bytes_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_bytes_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -991,7 +991,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -1041,7 +1041,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -1091,7 +1091,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_dropped_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  rate(\n    container_network_receive_packets_dropped_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -1141,7 +1141,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_dropped_total{cluster=\"$cluster\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  rate(\n    container_network_transmit_packets_dropped_total{cluster=\"$cluster\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "{{pod}}"
                   }
                 }
@@ -1191,7 +1191,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "ceil(\n  sum by (pod) (\n    rate(\n      container_fs_writes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "ceil(\n  sum by (pod) (\n    rate(\n      container_fs_writes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "Writes"
                   }
                 }
@@ -1207,7 +1207,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "ceil(\n  sum by (pod) (\n    rate(\n      container_fs_reads_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n    )\n  )\n)",
+                    "query": "ceil(\n  sum by (pod) (\n    rate(\n      container_fs_reads_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n    )\n  )\n)",
                     "seriesNameFormat": "Reads"
                   }
                 }
@@ -1257,7 +1257,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  rate(\n    container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "Writes"
                   }
                 }
@@ -1273,7 +1273,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (pod) (\n  rate(\n    container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=\"cadvisor\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
+                    "query": "sum by (pod) (\n  rate(\n    container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",device=~\"(/dev.+)|mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=~\"$pod\"}[$__rate_interval]\n  )\n)",
                     "seriesNameFormat": "Reads"
                   }
                 }
@@ -1323,7 +1323,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "ceil(\n  sum by (container) (\n      rate(\n        container_fs_reads_total{cluster=\"$cluster\",container!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n      )\n    +\n      rate(\n        container_fs_writes_total{cluster=\"$cluster\",container!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n      )\n  )\n)",
+                    "query": "ceil(\n  sum by (container) (\n      rate(\n        container_fs_reads_total{cluster=\"$cluster\",container!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n      )\n    +\n      rate(\n        container_fs_writes_total{cluster=\"$cluster\",container!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n      )\n  )\n)",
                     "seriesNameFormat": "{{container}}"
                   }
                 }
@@ -1373,7 +1373,7 @@
                       "kind": "PrometheusDatasource",
                       "name": "prometheus-datasource"
                     },
-                    "query": "sum by (container) (\n    rate(\n      container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  +\n    rate(\n      container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",job=\"cadvisor\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n)",
+                    "query": "sum by (container) (\n    rate(\n      container_fs_reads_bytes_total{cluster=\"$cluster\",container!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n  +\n    rate(\n      container_fs_writes_bytes_total{cluster=\"$cluster\",container!=\"\",job=~\".*cadvisor.*\",namespace=\"$namespace\",pod=\"$pod\"}[$__rate_interval]\n    )\n)",
                     "seriesNameFormat": "{{container}}"
                   }
                 }

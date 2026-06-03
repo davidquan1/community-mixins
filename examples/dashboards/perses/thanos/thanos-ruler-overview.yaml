@@ -29,6 +29,23 @@ spec:
         - kind: ListVariable
           spec:
             display:
+                name: cluster
+                hidden: false
+            allowAllValue: false
+            allowMultiple: false
+            plugin:
+                kind: PrometheusLabelValuesVariable
+                spec:
+                    datasource:
+                        kind: PrometheusDatasource
+                        name: prometheus-datasource
+                    labelName: cluster
+                    matchers:
+                        - thanos_build_info{}
+            name: cluster
+        - kind: ListVariable
+          spec:
+            display:
                 name: namespace
                 hidden: false
             allowAllValue: false
@@ -76,7 +93,9 @@ spec:
                                     name: prometheus-datasource
                                 query: |-
                                     sum by (namespace, job, rule_group, strategy) (
-                                      rate(prometheus_rule_evaluations_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                      rate(
+                                        prometheus_rule_evaluations_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                      )
                                     )
                                 seriesNameFormat: '{{rule_group}} {{strategy}} - {{job}} {{namespace}}'
         "0_1":
@@ -113,7 +132,7 @@ spec:
                                 query: |-
                                     sum by (namespace, job, rule_group, strategy) (
                                       rate(
-                                        prometheus_rule_evaluation_failures_total{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        prometheus_rule_evaluation_failures_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: '{{rule_group}} {{strategy}} - {{job}} {{namespace}}'
@@ -151,7 +170,7 @@ spec:
                                 query: |-
                                     sum by (namespace, job, rule_group, strategy) (
                                       rate(
-                                        prometheus_rule_group_iterations_missed_total{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        prometheus_rule_group_iterations_missed_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: '{{rule_group}} {{strategy}} - {{job}} {{namespace}}'
@@ -187,11 +206,11 @@ spec:
                                     name: prometheus-datasource
                                 query: |4-
                                       sum by (namespace, job, rule_group) (
-                                        prometheus_rule_group_last_duration_seconds{job=~"$job",namespace="$namespace"}
+                                        prometheus_rule_group_last_duration_seconds{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                       )
                                     >
                                       sum by (namespace, job, rule_group) (
-                                        prometheus_rule_group_interval_seconds{job=~"$job",namespace="$namespace"}
+                                        prometheus_rule_group_interval_seconds{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                       )
                                 seriesNameFormat: '{{rule_group}} - {{job}} {{namespace}}'
         "1_0":
@@ -227,7 +246,9 @@ spec:
                                     name: prometheus-datasource
                                 query: |-
                                     sum by (namespace, job, alertmanager) (
-                                      rate(thanos_alert_sender_alerts_sent_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                      rate(
+                                        thanos_alert_sender_alerts_sent_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                      )
                                     )
                                 seriesNameFormat: '{{alertmanager}} - {{job}} {{namespace}}'
         "1_1":
@@ -263,7 +284,9 @@ spec:
                                     name: prometheus-datasource
                                 query: |-
                                     sum by (namespace, job, alertmanager) (
-                                      rate(thanos_alert_sender_alerts_dropped_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                      rate(
+                                        thanos_alert_sender_alerts_dropped_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                      )
                                     )
                                 seriesNameFormat: '{{alertmanager}} - {{job}} {{namespace}}'
         "1_2":
@@ -299,11 +322,15 @@ spec:
                                     name: prometheus-datasource
                                 query: |4-
                                       sum by (namespace, job) (
-                                        rate(thanos_alert_sender_errors_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                        rate(
+                                          thanos_alert_sender_errors_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        )
                                       )
                                     /
                                       sum by (namespace, job) (
-                                        rate(thanos_alert_sender_alerts_sent_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                        rate(
+                                          thanos_alert_sender_alerts_sent_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        )
                                       )
                                 seriesNameFormat: '{{job}} {{namespace}}'
         "1_3":
@@ -341,7 +368,7 @@ spec:
                                       0.5,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          thanos_alert_sender_latency_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          thanos_alert_sender_latency_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -359,7 +386,7 @@ spec:
                                       0.9,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          thanos_alert_sender_latency_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          thanos_alert_sender_latency_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -377,7 +404,7 @@ spec:
                                       0.99,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          thanos_alert_sender_latency_seconds_bucket{job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          thanos_alert_sender_latency_seconds_bucket{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -414,7 +441,9 @@ spec:
                                     name: prometheus-datasource
                                 query: |-
                                     sum by (namespace, job) (
-                                      rate(thanos_alert_queue_alerts_pushed_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                      rate(
+                                        thanos_alert_queue_alerts_pushed_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                      )
                                     )
                                 seriesNameFormat: '{{job}} {{namespace}}'
         "2_1":
@@ -449,7 +478,9 @@ spec:
                                     name: prometheus-datasource
                                 query: |-
                                     sum by (namespace, job) (
-                                      rate(thanos_alert_queue_alerts_popped_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                      rate(
+                                        thanos_alert_queue_alerts_popped_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                      )
                                     )
                                 seriesNameFormat: '{{job}} {{namespace}}'
         "2_2":
@@ -485,11 +516,15 @@ spec:
                                     name: prometheus-datasource
                                 query: |4-
                                       sum by (namespace, job) (
-                                        rate(thanos_alert_queue_alerts_dropped_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                        rate(
+                                          thanos_alert_queue_alerts_dropped_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        )
                                       )
                                     /
                                       sum by (namespace, job) (
-                                        rate(thanos_alert_queue_alerts_pushed_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                        rate(
+                                          thanos_alert_queue_alerts_pushed_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        )
                                       )
                                 seriesNameFormat: '{{job}} {{namespace}}'
         "3_0":
@@ -526,7 +561,7 @@ spec:
                                 query: |-
                                     sum by (namespace, job, grpc_method, grpc_code) (
                                       rate(
-                                        grpc_server_handled_total{grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        grpc_server_handled_total{cluster="$cluster",grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: '{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}'
@@ -564,13 +599,13 @@ spec:
                                 query: |4-
                                       sum by (namespace, job, grpc_code) (
                                         rate(
-                                          grpc_server_handled_total{grpc_code=~"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss",grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handled_total{cluster="$cluster",grpc_code=~"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss",grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     / ignoring (grpc_code) group_left ()
                                       sum by (namespace, job) (
                                         rate(
-                                          grpc_server_handled_total{grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handled_total{cluster="$cluster",grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}'
@@ -609,7 +644,7 @@ spec:
                                       0.5,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          grpc_server_handling_seconds_bucket{grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handling_seconds_bucket{cluster="$cluster",grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -627,7 +662,7 @@ spec:
                                       0.9,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          grpc_server_handling_seconds_bucket{grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handling_seconds_bucket{cluster="$cluster",grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -645,7 +680,7 @@ spec:
                                       0.99,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          grpc_server_handling_seconds_bucket{grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handling_seconds_bucket{cluster="$cluster",grpc_method!="RemoteWrite",grpc_type="unary",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -684,7 +719,7 @@ spec:
                                 query: |-
                                     sum by (namespace, job, grpc_method, grpc_code) (
                                       rate(
-                                        grpc_server_handled_total{grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                        grpc_server_handled_total{cluster="$cluster",grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                       )
                                     )
                                 seriesNameFormat: '{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}'
@@ -722,13 +757,13 @@ spec:
                                 query: |4-
                                       sum by (namespace, job, grpc_code) (
                                         rate(
-                                          grpc_server_handled_total{grpc_code=~"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss",grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handled_total{cluster="$cluster",grpc_code=~"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss",grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     / ignoring (grpc_code) group_left ()
                                       sum by (namespace, job) (
                                         rate(
-                                          grpc_server_handled_total{grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handled_total{cluster="$cluster",grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                 seriesNameFormat: '{{namespace}} {{job}} {{grpc_method}} {{grpc_code}}'
@@ -767,7 +802,7 @@ spec:
                                       0.5,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          grpc_server_handling_seconds_bucket{grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handling_seconds_bucket{cluster="$cluster",grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -785,7 +820,7 @@ spec:
                                       0.9,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          grpc_server_handling_seconds_bucket{grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handling_seconds_bucket{cluster="$cluster",grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -803,7 +838,7 @@ spec:
                                       0.99,
                                       sum by (namespace, job, le) (
                                         rate(
-                                          grpc_server_handling_seconds_bucket{grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                          grpc_server_handling_seconds_bucket{cluster="$cluster",grpc_type="server_stream",job=~"$job",namespace="$namespace"}[$__rate_interval]
                                         )
                                       )
                                     )
@@ -840,7 +875,10 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: rate(process_cpu_seconds_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                query: |-
+                                    rate(
+                                      process_cpu_seconds_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                    )
                                 seriesNameFormat: '{{pod}}'
         "5_1":
             kind: Panel
@@ -874,7 +912,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_alloc_bytes{job=~"$job",namespace="$namespace"}
+                                query: go_memstats_alloc_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                 seriesNameFormat: Alloc All {{pod}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -884,7 +922,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_heap_alloc_bytes{job=~"$job",namespace="$namespace"}
+                                query: go_memstats_heap_alloc_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                 seriesNameFormat: Alloc Heap {{pod}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -894,7 +932,10 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: rate(go_memstats_alloc_bytes_total{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                query: |-
+                                    rate(
+                                      go_memstats_alloc_bytes_total{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                    )
                                 seriesNameFormat: Alloc Rate All {{pod}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -904,7 +945,10 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: rate(go_memstats_heap_alloc_bytes{job=~"$job",namespace="$namespace"}[$__rate_interval])
+                                query: |-
+                                    rate(
+                                      go_memstats_heap_alloc_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}[$__rate_interval]
+                                    )
                                 seriesNameFormat: Alloc Rate Heap {{pod}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -914,7 +958,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_stack_inuse_bytes{job=~"$job",namespace="$namespace"}
+                                query: go_memstats_stack_inuse_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                 seriesNameFormat: Inuse Stack {{pod}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -924,7 +968,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_memstats_heap_inuse_bytes{job=~"$job",namespace="$namespace"}
+                                query: go_memstats_heap_inuse_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                 seriesNameFormat: Inuse Heap {{pod}}
                     - kind: TimeSeriesQuery
                       spec:
@@ -934,7 +978,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: process_resident_memory_bytes{job=~"$job",namespace="$namespace"}
+                                query: process_resident_memory_bytes{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                 seriesNameFormat: Resident Memory {{pod}}
         "5_2":
             kind: Panel
@@ -968,7 +1012,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_goroutines{job=~"$job",namespace="$namespace"}
+                                query: go_goroutines{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                 seriesNameFormat: '{{pod}}'
         "5_3":
             kind: Panel
@@ -1002,7 +1046,7 @@ spec:
                                 datasource:
                                     kind: PrometheusDatasource
                                     name: prometheus-datasource
-                                query: go_gc_duration_seconds{job=~"$job",namespace="$namespace"}
+                                query: go_gc_duration_seconds{cluster="$cluster",job=~"$job",namespace="$namespace"}
                                 seriesNameFormat: '{{quantile}} - {{pod}}'
     layouts:
         - kind: Grid
